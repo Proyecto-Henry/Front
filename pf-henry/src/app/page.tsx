@@ -1,69 +1,86 @@
-import Image from 'next/image';
-import { Plus, Building, Boxes, LineChart } from 'lucide-react';
+import Image from "next/image";
+import { Plus, Building, Boxes, LineChart } from "lucide-react";
 
 export default function Home() {
   return (
-    <main>
-      <section>
-
-        <div>
-          <div>
-            <h1>
-              BIENVENIDO A <span>SafeStock</span>
+    <main className="min-h-screen flex flex-col items-center justify-center bg-white px-4 py-8">
+      <section className="max-w-6xl w-full flex flex-col items-center">
+        <div className="w-full flex flex-col lg:flex-row items-center justify-between">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 w-full lg:w-1/2">
+            <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+              BIENVENIDO A <span className="text-[#3066BE]">SafeStock</span>
             </h1>
-            <p>
-              Donde puedes gestionar tus sucursales y stock de manera rápida, eficiente y cómoda
+            <p className="text-[#3c3744] text-xl md:text-2xl max-w-md">
+              Donde puedes gestionar tus sucursales y stock de manera rápida,
+              eficiente y cómoda
             </p>
           </div>
 
-          <div>
-            <Image 
+          <div className="flex justify-center w-full lg:w-1/2 mt-0 lg:mt-0">
+            <Image
               src="/homeImg.png"
               alt="Ilustración gestión de stock"
-              width={600}
-              height={600}
+              width={550}
+              height={550}
+              className="object-contain"
             />
           </div>
         </div>
 
-        <div>
-          <h2>¿Qué puedes hacer?</h2>
+        <div className="mt-12 flex flex-col items-center space-y-6 w-full">
+          <h2 className="text-xl font-semibold text-center">
+            ¿Qué puedes hacer?
+          </h2>
 
-          <div>
-            <div>
-              <Plus size={32} />
-              <p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+              <Plus
+                size={32}
+                className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
+              />
+              <p className="font-semibold text-[#3c3744] group-hover:text-[#3066BE] transition-colors text-center text-sm">
                 AGREGAR SUCURSALES
               </p>
             </div>
-            <div>
-              <Building size={32} />
-              <p>
+
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+              <Building
+                size={32}
+                className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
+              />
+              <p className="font-semibold text-[#3c3744] group-hover:text-[#3066BE] transition-colors text-center text-sm">
                 ADMINISTRAR SUCURSALES
               </p>
             </div>
-            <div>
-              <Boxes size={32} />
-              <p>
+
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+              <Boxes
+                size={32}
+                className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
+              />
+              <p className="font-semibold text-[#3c3744] group-hover:text-[#3066BE] transition-colors text-center text-sm">
                 GESTIONAR STOCK
               </p>
             </div>
-            <div>
-              <LineChart size={32} />
-              <p>
+
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+              <LineChart
+                size={32}
+                className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
+              />
+              <p className="font-semibold text-[#3c3744] group-hover:text-[#3066BE] transition-colors text-center text-sm">
                 CONTROLAR VENTAS
               </p>
             </div>
           </div>
         </div>
 
-        <div>
-          <p>¿No tienes cuenta?</p>
-          <a href="#">
-            Crea una gratis o elige el plan premium
+        <div className="pt-12 text-center">
+          <p className="text-[#3c3744]">¿No tienes cuenta?</p>
+          <a href="/auth" className="text-[#3066BE] font-semibold hover:underline">
+            Crea una o inicie sesión
           </a>
         </div>
-
       </section>
     </main>
   );
