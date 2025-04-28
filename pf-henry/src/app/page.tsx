@@ -3,7 +3,7 @@ import { Plus, Building, Boxes, LineChart } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white px-4 py-8">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-white !important px-4 py-8">
       <section className="max-w-6xl w-full flex flex-col items-center">
         <div className="w-full flex flex-col lg:flex-row items-center justify-between">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 w-full lg:w-1/2">
@@ -77,7 +77,10 @@ export default function Home() {
 
         <div className="pt-12 text-center">
           <p className="text-[#3c3744]">¿No tienes cuenta?</p>
-          <a href="/auth" className="text-[#3066BE] font-semibold hover:underline">
+          <a
+            href="/auth"
+            className="text-[#3066BE] font-semibold hover:underline"
+          >
             Crea una o inicie sesión
           </a>
         </div>
