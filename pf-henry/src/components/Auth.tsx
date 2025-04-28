@@ -53,6 +53,7 @@ const SlideLoginForm: React.FC = () => {
       if (response) {
         toast.success("Usuario logeado correctamente");
         router.push("/");
+        router.push("/admin");
         reset();
       }
     } catch (error) {
@@ -62,108 +63,110 @@ const SlideLoginForm: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <input type="checkbox" id="chk" aria-hidden="true" />
+    <main>
+      <div className="container">
+        <input type="checkbox" id="chk" aria-hidden="true" />
 
-      {/* Sign Up */}
-      <div className="signup">
-        <form onSubmit={handleSubmit(onSignupSubmit)}>
-          <label htmlFor="chk" aria-hidden="true">
-            Registro
-          </label>
-          <input
-            type="text"
-            placeholder="Nombre de usuario"
-            {...registerSignup("name", {
-              required: "Nombre de usuario requerido",
-              pattern: {
-                value: /^[A-Za-z\s]+$/,
-                message: "El nombre de usuario solo puede contener letras",
-              },
-              minLength: {
-                value: 3,
-                message:
-                  "El nombre de usuario debe tener al menos 3 caracteres",
-              },
-            })}
-          />
-          {signupErrors.name && (
-            <p className="error">{signupErrors.name.message}</p>
-          )}
+        {/* Sign Up */}
+        <div className="signup">
+          <form onSubmit={handleSubmit(onSignupSubmit)}>
+            <label htmlFor="chk" aria-hidden="true">
+              Registro
+            </label>
+            <input
+              type="text"
+              placeholder="Nombre de usuario"
+              {...registerSignup("name", {
+                required: "Nombre de usuario requerido",
+                pattern: {
+                  value: /^[A-Za-z\s]+$/,
+                  message: "El nombre de usuario solo puede contener letras",
+                },
+                minLength: {
+                  value: 3,
+                  message:
+                    "El nombre de usuario debe tener al menos 3 caracteres",
+                },
+              })}
+            />
+            {signupErrors.name && (
+              <p className="error">{signupErrors.name.message}</p>
+            )}
 
-          <input
-            type="email"
-            placeholder="Email"
-            {...registerSignup("email", {
-              required: "Email requerido",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Email inválido",
-              },
-            })}
-          />
-          {signupErrors.email && (
-            <p className="error">{signupErrors.email.message}</p>
-          )}
+            <input
+              type="email"
+              placeholder="Email"
+              {...registerSignup("email", {
+                required: "Email requerido",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Email inválido",
+                },
+              })}
+            />
+            {signupErrors.email && (
+              <p className="error">{signupErrors.email.message}</p>
+            )}
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            {...registerSignup("password", {
-              required: "Contraseña requerida",
-              minLength: { value: 6, message: "Mínimo 6 caracteres" },
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message:
-                  "La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial",
-              },
-            })}
-          />
-          {signupErrors.password && (
-            <p className="error">{signupErrors.password.message}</p>
-          )}
+            <input
+              type="password"
+              placeholder="Contraseña"
+              {...registerSignup("password", {
+                required: "Contraseña requerida",
+                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                  message:
+                    "La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial",
+                },
+              })}
+            />
+            {signupErrors.password && (
+              <p className="error">{signupErrors.password.message}</p>
+            )}
 
-          <button type="submit">Registrarse</button>
-        </form>
+            <button type="submit">Registrarse</button>
+          </form>
+        </div>
+
+        {/* Login */}
+        <div className="login">
+          <form onSubmit={handleLoginSubmit(onLoginSubmit)}>
+            <label htmlFor="chk" aria-hidden="true">
+              Ingresar
+            </label>
+            <input
+              type="email"
+              placeholder="Email"
+              {...registerLogin("email", {
+                required: "Email requerido",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Email inválido",
+                },
+              })}
+            />
+            {loginErrors.email && (
+              <p className="error">{loginErrors.email.message}</p>
+            )}
+
+            <input
+              type="password"
+              placeholder="Contraseña"
+              {...registerLogin("password", {
+                required: "Contraseña requerida",
+              })}
+            />
+            {loginErrors.password && (
+              <p className="error">{loginErrors.password.message}</p>
+            )}
+
+            <button type="submit">Logearse</button>
+          </form>
+        </div>
       </div>
-
-      {/* Login */}
-      <div className="login">
-        <form onSubmit={handleLoginSubmit(onLoginSubmit)}>
-          <label htmlFor="chk" aria-hidden="true">
-            Ingresar
-          </label>
-          <input
-            type="email"
-            placeholder="Email"
-            {...registerLogin("email", {
-              required: "Email requerido",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Email inválido",
-              },
-            })}
-          />
-          {loginErrors.email && (
-            <p className="error">{loginErrors.email.message}</p>
-          )}
-
-          <input
-            type="password"
-            placeholder="Contraseña"
-            {...registerLogin("password", {
-              required: "Contraseña requerida",
-            })}
-          />
-          {loginErrors.password && (
-            <p className="error">{loginErrors.password.message}</p>
-          )}
-
-          <button type="submit">Logearse</button>
-        </form>
-      </div>
-    </div>
+    </main>
   );
 };
 

@@ -39,12 +39,8 @@
 // }
 
 import type { Metadata } from "next";
-<<<<<<< HEAD
-import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
-=======
 import { Geist, Geist_Mono, Inter } from "next/font/google";
->>>>>>> feature/cristian
+import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
 import Navbar from "../components/Navbar";
@@ -75,21 +71,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-<<<<<<< HEAD
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Toaster richColors position="top-center" />
-        {children}
-=======
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${inter}`}
+    >
       <body className="antialiased">
         <Providers>
           <Navbar />
+          <Toaster richColors position="top-center" />
+
           {children}
         </Providers>
->>>>>>> feature/cristian
       </body>
     </html>
   );
