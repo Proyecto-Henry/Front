@@ -9,6 +9,7 @@ import { loginUser, registerUser } from "@/services/authServices";
 import { toast } from "sonner";
 import { ILoginForm, IRegisterForm } from "@/interfaces/interfaces";
 import { useRouter } from "next/navigation";
+import useUserDataStore from "@/store";
 
 // type FormValues = {
 //   username?: string;
@@ -18,6 +19,7 @@ import { useRouter } from "next/navigation";
 
 const SlideLoginForm: React.FC = () => {
   const router = useRouter();
+  const { setUserData } = useUserDataStore();
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
@@ -38,6 +40,7 @@ const SlideLoginForm: React.FC = () => {
 
       if (response) {
         toast.success("Usuario registrado correctamente");
+
         reset();
       }
     } catch (error) {
@@ -52,8 +55,8 @@ const SlideLoginForm: React.FC = () => {
 
       if (response) {
         toast.success("Usuario logeado correctamente");
+        setUserData(response);
         router.push("/");
-        router.push("/admin");
         reset();
       }
     } catch (error) {
