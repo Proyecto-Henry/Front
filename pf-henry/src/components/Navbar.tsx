@@ -1,4 +1,5 @@
 "use client";
+import useUserDataStore from "@/store";
 import {
   Navbar,
   NavbarBrand,
@@ -8,9 +9,9 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
   Image,
 } from "@heroui/react";
+import { LogIn, LogOut } from "lucide-react";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -31,49 +32,58 @@ export default function App() {
     "Help & Feedback",
     "Log Out",
   ];
+  const { userData, isHydrated } = useUserDataStore();
 
   return (
     <Navbar disableAnimation isBordered className="bg-white">
-      <div className="w-full flex items-center">
-        {/* Logo a la izquierda con margen negativo si es necesario */}
-        <div className="mr-auto">
-          <Image src="/logoApp.webp" alt="Logo ACME" className="w-24 h-auto" />
+      <Link color="foreground" href="/">
+        <div className="w-full flex items-center">
+          {/* Logo a la izquierda con margen negativo si es necesario */}
+          <div className="mr-auto">
+            <Image
+              src="/logoApp.webp"
+              alt="Logo ACME"
+              className="w-24 h-auto"
+            />
+          </div>
+
+          {/* Resto del contenido del navbar */}
+          <NavbarContent className="sm:hidden" justify="start">
+            <NavbarMenuToggle />
+          </NavbarContent>
+
+          <NavbarBrand className="flex items-center gap-1">
+            <p
+              className={`font-extrabold text-[#4470AF] ${inter}`}
+              style={{ fontSize: "28px" }}
+            >
+              SafeStock
+            </p>
+          </NavbarBrand>
         </div>
-
-        {/* Resto del contenido del navbar */}
-        <NavbarContent className="sm:hidden" justify="start">
-          <NavbarMenuToggle />
-        </NavbarContent>
-
-        <NavbarBrand className="flex items-center gap-1">
-          <p
-            className={`font-extrabold text-[#4470AF] ${inter}`}
-            style={{ fontSize: "28px" }}
-          >
-            SafeStock
-          </p>
-        </NavbarBrand>
-      </div>
-
-      <NavbarContent
-        className="sm:hidden pr-3"
-        justify="center"
-      ></NavbarContent>
+      </Link>
 
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button
-            as={Link}
-            className="bg-[#1954ab] text-white"
-            /* color="warning" */ href="#"
-            variant="flat"
-          >
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {!userData && isHydrated && (
+          <NavbarItem className="hidden lg:flex">
+            <Link href="/auth" className="group">
+              <LogIn />
+              <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                Rsgistrarse o iniciar sesión
+              </span>
+            </Link>
+          </NavbarItem>
+        )}
+        {userData && isHydrated && (
+          <NavbarItem className="hidden lg:flex">
+            <Link href="/logout" className="group">
+              <LogOut />
+              <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                Cerrar sesión
+              </span>
+            </Link>
+          </NavbarItem>
+        )}
       </NavbarContent>
 
       <NavbarMenu>

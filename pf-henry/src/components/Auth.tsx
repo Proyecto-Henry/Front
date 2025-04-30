@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { ILoginForm, IRegisterForm } from "@/interfaces/interfaces";
 import { useRouter } from "next/navigation";
 import useUserDataStore from "@/store";
+import { Spinner } from "@heroui/react";
 
 // type FormValues = {
 //   username?: string;
@@ -23,15 +24,34 @@ const SlideLoginForm: React.FC = () => {
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
-    formState: { errors: loginErrors },
+    formState: { errors: loginErrors, isSubmitting: isSubmittingLogin },
   } = useForm<ILoginForm>();
 
   const {
     register: registerSignup,
     handleSubmit,
-    formState: { errors: signupErrors },
+    formState: { errors: signupErrors, isSubmitting: isSubmittingSignup },
     reset,
   } = useForm<IRegisterForm>();
+
+  if (isSubmittingLogin) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+        <div className="flex flex-col items-center gap-4">
+          <Spinner />
+        </div>
+      </div>
+    );
+  }
+  if (isSubmittingSignup) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+        <div className="flex flex-col items-center gap-4">
+          <Spinner />
+        </div>
+      </div>
+    );
+  }
 
   const onSignupSubmit = async (data: IRegisterForm) => {
     try {
