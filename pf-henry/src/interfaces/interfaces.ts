@@ -12,3 +12,14 @@ export interface ILoginForm {
 export interface ProtectedPageProps{
   children: React.ReactNode;
 }
+
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  isActive: boolean;
+  subscriptionType: "premium" | "basic";
+  branchCount: number;
+  lastPaymentDate?: string;
+  hasPaymentRecord: boolean;
+}
