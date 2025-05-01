@@ -69,7 +69,7 @@ export default function App() {
             <Link href="/auth" className="group">
               <LogIn />
               <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
-                Rsgistrarse o iniciar sesión
+                Registrarse o iniciar sesión
               </span>
             </Link>
           </NavbarItem>

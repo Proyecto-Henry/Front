@@ -185,7 +185,7 @@ const SlideLoginForm: React.FC = () => {
               <p className="error">{loginErrors.password.message}</p>
             )}
 
-            <button type="submit">Logearse</button>
+            <button type="submit">Ingresar</button>
           </form>
         </div>
       </div>
