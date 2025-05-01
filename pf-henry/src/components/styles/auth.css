@@ -6,7 +6,6 @@ main {
   align-content: center;
   min-height: 100vh;
   font-family: sans-serif;
-  background: linear-gradient(to bottom, #f9f9fd, #4470af);
 }
 .container {
   margin-top: 100px;

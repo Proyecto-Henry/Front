@@ -8,3 +8,7 @@ export interface ILoginForm {
   email: string;
   password: string;
 }
+
+export interface ProtectedPageProps{
+  children: React.ReactNode;
+}
