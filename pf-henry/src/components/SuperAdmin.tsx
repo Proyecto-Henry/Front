@@ -1,114 +1,84 @@
 "use client";
-import { useState } from 'react';
-import { IUser } from '@/interfaces/interfaces';
+import { useEffect, useState } from 'react';
+import { AdminService } from '@/services/adminService';
+import { IAdmin } from '@/interfaces/interfaces';
 import { UserDataSummary } from './UserDataSummary';
 import { UserSearchBar } from './UserSearchBar';
 import { UserCard } from './UserCard';
-import { UserRoundX, SearchX } from 'lucide-react';
+import { Loader2, UserRoundX, SearchX } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const SuperAdmin = () => {
-  const initialUsers: IUser[] = [
-    {
-        id: '1',
-        name: "Pepe",
-        email: "pepe@empresa.com",
-        isActive: true,
-        subscriptionType: "premium",
-        branchCount: 5,
-        lastPaymentDate: "28/04/2025",
-        hasPaymentRecord: true,
-      },
-      {
-        id: '2',
-        name: "Fulano",
-        email: "fulano@correo.com",
-        isActive: false,
-        subscriptionType: "premium",
-        branchCount: 5,
-        lastPaymentDate: "28/01/2025",
-        hasPaymentRecord: true,
-      },
-      {
-        id: '3',
-        name: "Oakí",
-        email: "oaki@negocio.com",
-        isActive: false,
-        subscriptionType: "basic",
-        branchCount: 1,
-        hasPaymentRecord: false,
-      },
-      {
-        id: '4',
-        name: "User 1",
-        email: "user1@example.com",
-        isActive: true,
-        subscriptionType: "basic",
-        branchCount: 0,
-        hasPaymentRecord: false,
-      },
-      {
-        id: '5',
-        name: "Usuario adicional 1",
-        email: "adicional1@mail.com",
-        isActive: true,
-        subscriptionType: "premium",
-        branchCount: 3,
-        lastPaymentDate: "15/04/2025",
-        hasPaymentRecord: true,
-      },
-      {
-        id: '6',
-        name: "Usuario adicional 2",
-        email: "adicional2@mail.com",
-        isActive: false,
-        subscriptionType: "basic",
-        branchCount: 2,
-        lastPaymentDate: "10/03/2025",
-        hasPaymentRecord: true,
-      }
-  ];
-
   const [searchText, setSearchText] = useState('');
-  const [users, setUsers] = useState<IUser[]>(initialUsers);
+  const [admins, setAdmins] = useState<IAdmin[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredUsers = users.filter(user => 
-    user.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchText.toLowerCase())
+  // Cargar datos
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await AdminService.getAdmins();
+        setAdmins(data);
+      } catch (err) {
+        toast.error('Error al cargar administradores');
+        console.log(err)
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const toggleStatus = async (id: string) => {
+    try {
+      const updatedAdmin = await AdminService.toggleStatus(id);
+      setAdmins(admins.map(admin => 
+        admin.id === id ? updatedAdmin : admin
+      ));
+    } catch (err) {
+      toast.error('Error al cambiar estado')
+      console.log(err)
+    }
+  };
+
+  const filteredAdmins = admins.filter(admin => 
+    admin.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+    admin.email?.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const activeUsersCount = users.filter(user => user.isActive).length;
+  const activeCount = admins.filter(a => a.status === 'active').length;
 
-  const toggleUserStatus = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId ? { ...user, isActive: !user.isActive } : user
-    ));
-  };
+  if (loading) return (
+    <div className="flex justify-center mt-20">
+      <Loader2 className="animate-spin h-12 w-12 text-blue-500" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-b from-[#fefeff] to-[#4470af]">
       <div className="mb-8 flex flex-col items-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">ADMINISTRACIÓN</h1>
         <UserDataSummary 
-          active={activeUsersCount} 
-          total={users.length} 
+          active={activeCount} 
+          total={admins.length} 
         />
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 text-center">
-          <h2 className="text-2xl font-semibold mb-4">GESTIÓN DE USUARIOS</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">GESTIÓN DE USUARIOS</h2>
           <UserSearchBar 
-            value={searchText} 
-            onChange={setSearchText} 
+            value={searchText}
+            onChange={setSearchText}  
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredUsers.length === 0 ? (
-            <div className="col-span-full text-center py-5">
-              {users.length === 0 ? (
+          {filteredAdmins.length === 0 ? (
+            <div className="col-span-full text-center py-10">
+              {admins.length === 0 ? (
                 <div className="flex flex-col items-center">
-                  <UserRoundX className="w-12 h-12 text-white" />
+                  <UserRoundX className="w-12 h-12 text-white mb-4" />
                   <h3 className="text-xl font-medium text-white">
                     No hay usuarios registrados
                   </h3>
@@ -118,7 +88,7 @@ export const SuperAdmin = () => {
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
-                  <SearchX className="w-12 h-12 text-white" />
+                  <SearchX className="w-12 h-12 text-white mb-4" />
                   <h3 className="text-xl font-medium text-white">
                     No encontramos resultados
                   </h3>
@@ -126,11 +96,11 @@ export const SuperAdmin = () => {
               )}
             </div>
           ) : (
-            filteredUsers.map(user => (
+            filteredAdmins.map(admin => (
               <UserCard
-                key={user.id}
-                user={user}
-                onStatusChange={() => toggleUserStatus(user.id)}
+                key={admin.id}
+                admin={admin}
+                onStatusChange={() => toggleStatus(admin.id)}
               />
             ))
           )}

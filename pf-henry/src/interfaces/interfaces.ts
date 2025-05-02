@@ -13,13 +13,13 @@ export interface ProtectedPageProps{
   children: React.ReactNode;
 }
 
-export interface IUser {
+export interface IAdmin {
   id: string;
   name: string;
-  email: string;
-  isActive: boolean;
-  subscriptionType: "premium" | "basic";
-  branchCount: number;
-  lastPaymentDate?: string;
-  hasPaymentRecord: boolean;
+  status: 'active' | 'inactive'; 
+  storesCount: number;
+  subscription: {
+    status: string; 
+    start_date: string; 
+  };
 }
