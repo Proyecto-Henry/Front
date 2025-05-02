@@ -1,11 +1,19 @@
 import { IAdmin } from "@/interfaces/interfaces";
-const API_URL = 'http://localhost:3001/admins';
+import { apiUrl } from "./config";
 
 export const AdminService = {
   async getAdmins(): Promise<IAdmin[]> {
-    const response = await fetch(API_URL);
-    if (!response.ok) throw new Error('Error al obtener admins');
-    return response.json();
+    try {
+      const res = await fetch(`${apiUrl}/admins`);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al obtener admins");
+      }
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   },
 
  
