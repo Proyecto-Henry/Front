@@ -8,11 +8,11 @@ export const AdminService = {
     return response.json();
   },
 
-  async toggleStatus(id: string): Promise<IAdmin> {
+ /*  async toggleStatus(id: string): Promise<IAdmin> {
     const response = await fetch(`${API_URL}/${id}/toggle-status`, {
       method: 'PATCH'
     });
     if (!response.ok) throw new Error('Error al cambiar estado');
     return response.json();
-  }
+  } */
 };
