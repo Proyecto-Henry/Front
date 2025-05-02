@@ -15,6 +15,4 @@ export const AdminService = {
       throw new Error((error as Error).message);
     }
   },
-
- 
 };

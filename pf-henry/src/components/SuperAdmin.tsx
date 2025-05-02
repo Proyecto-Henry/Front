@@ -21,7 +21,7 @@ export const SuperAdmin = () => {
         setAdmins(data);
       } catch (err) {
         toast.error('Error al cargar administradores');
-        console.log(err)
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -30,15 +30,8 @@ export const SuperAdmin = () => {
   }, []);
 
   const toggleStatus = async (id: string) => {
-    try {
-      const updatedAdmin = await AdminService.toggleStatus(id);
-      setAdmins(admins.map(admin => 
-        admin.id === id ? updatedAdmin : admin
-      ));
-    } catch (err) {
-      toast.error('Error al cambiar estado')
-      console.log(err)
-    }
+    toast.success("funcionalidad a implementar 🚨");
+    console.log(id)
   };
 
   const filteredAdmins = admins.filter(admin => 
@@ -69,7 +62,7 @@ export const SuperAdmin = () => {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">GESTIÓN DE USUARIOS</h2>
           <UserSearchBar 
             value={searchText}
-            onChange={setSearchText}  
+            onChange={setSearchText} 
           />
         </div>
 

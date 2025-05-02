@@ -15,6 +15,7 @@ export interface ProtectedPageProps{
 
 export interface IAdmin {
   id: string;
+  email: string;
   name: string;
   status: 'active' | 'inactive'; 
   storesCount: number;
