@@ -29,11 +29,10 @@ export const AdminService = {
   
       const response = await res.json();
       
-      // Normalizamos el status por si el backend usa "ACTIVE/INACTIVE"
       const normalizedStatus = 
         response.status === 'ACTIVE' ? 'active' :
         response.status === 'INACTIVE' ? 'inactive' :
-        response.status; // Para casos donde ya usa 'active/inactive'
+        response.status; 
   
       return {
         status: normalizedStatus,
