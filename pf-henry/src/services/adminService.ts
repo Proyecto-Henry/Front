@@ -9,10 +9,39 @@ export const AdminService = {
         const errorData = await res.json();
         throw new Error(errorData.message || "Error al obtener admins");
       }
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (error) {
       throw new Error((error as Error).message);
     }
   },
+
+  async toggleStatus(admin_id: string): Promise<{ status: 'active' | 'inactive'; message: string }> {
+    try {
+      const res = await fetch(`${apiUrl}/admins/${admin_id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" }
+      });
+  
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al cambiar estado");
+      }
+  
+      const response = await res.json();
+      
+      // Normalizamos el status por si el backend usa "ACTIVE/INACTIVE"
+      const normalizedStatus = 
+        response.status === 'ACTIVE' ? 'active' :
+        response.status === 'INACTIVE' ? 'inactive' :
+        response.status; // Para casos donde ya usa 'active/inactive'
+  
+      return {
+        status: normalizedStatus,
+        message: response.message
+      };
+      
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  }
 };
