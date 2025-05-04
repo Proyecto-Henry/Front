@@ -54,7 +54,7 @@ input {
   outline: none;
 }
 
-button {
+#btn {
   width: 60%;
   height: 40px;
   background: #4470af;
@@ -72,7 +72,7 @@ button {
   transition: 0.5s ease-in;
 }
 
-button:hover {
+#btn:hover {
   background: #12436e;
 }
 
