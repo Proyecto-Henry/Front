@@ -7,6 +7,7 @@ interface ISafeStockStore {
 
   setUserData: (data: any) => void;
   setHydrated: (state: boolean) => void;
+  clearUserData: () => void;
 }
 
 // Add isHydrated flag to track when the store has been hydrated from storage
@@ -19,6 +20,7 @@ const useUserDataStore = create<ISafeStockStore>()(
 
         setUserData: (data) => set({ userData: data }),
         setHydrated: (state) => set({ isHydrated: state }),
+        clearUserData: () => set({ userData: null, isHydrated: false }),
       }),
       {
         name: "safeStock-store",

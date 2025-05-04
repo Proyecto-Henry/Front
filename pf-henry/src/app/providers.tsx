@@ -1,15 +1,16 @@
-'use client'
-import { ReactNode } from "react"
-import { HeroUIProvider } from "@heroui/react"
+"use client";
+import { ReactNode } from "react";
+import { HeroUIProvider } from "@heroui/react";
+import { SessionProvider } from "next-auth/react";
 
 type ProvidersProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <HeroUIProvider>
-      {children}
-    </HeroUIProvider>
-  )
+    <SessionProvider>
+      <HeroUIProvider>{children}</HeroUIProvider>
+    </SessionProvider>
+  );
 }

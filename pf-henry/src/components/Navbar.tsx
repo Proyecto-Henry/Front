@@ -11,7 +11,9 @@ import {
   Link,
   Image,
 } from "@heroui/react";
+// import { s } from "framer-motion/client";
 import { LogIn, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -20,22 +22,16 @@ const inter = Inter({
 });
 
 export default function App() {
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
-  const { userData, isHydrated } = useUserDataStore();
+  // const menuItems = ["Home", "Dashboard", "Cerrar Sesión", "Iniciar Sesión"];
+  const { userData, isHydrated, clearUserData } = useUserDataStore();
+  const { data: session } = useSession();
+  console.log("Session:", session);
 
   return (
     <Navbar disableAnimation isBordered className="bg-white">
+      <NavbarContent className="sm:hidden" justify="start">
+        {(userData || !userData) && isHydrated && <NavbarMenuToggle />}
+      </NavbarContent>
       <Link color="foreground" href="/">
         <div className="w-full flex items-center">
           {/* Logo a la izquierda con margen negativo si es necesario */}
@@ -46,11 +42,6 @@ export default function App() {
               className="w-24 h-auto"
             />
           </div>
-
-          {/* Resto del contenido del navbar */}
-          <NavbarContent className="sm:hidden" justify="start">
-            <NavbarMenuToggle />
-          </NavbarContent>
 
           <NavbarBrand className="flex items-center gap-1">
             <p
@@ -63,48 +54,80 @@ export default function App() {
         </div>
       </Link>
 
-      <NavbarContent justify="end">
+      <NavbarContent justify="end" className="hidden sm:flex">
         {!userData && isHydrated && (
-          <NavbarItem className="hidden lg:flex">
-            <Link href="/auth" className="group">
-              <LogIn />
-              <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+          <NavbarItem>
+            <Link
+              href="/auth"
+              className="relative group flex items-center justify-center p-2"
+            >
+              <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
                 Registrarse o iniciar sesión
               </span>
+              <LogIn />
             </Link>
           </NavbarItem>
         )}
         {userData && isHydrated && (
-          <NavbarItem className="hidden lg:flex">
-            <Link href="/logout" className="group">
-              <LogOut />
-              <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
-                Cerrar sesión
-              </span>
+          <NavbarItem>
+            <Link>
+              <button
+                className="relative group flex items-center justify-center p-2"
+                onClick={() => {
+                  signOut();
+                  clearUserData();
+                }}
+              >
+                <LogOut />
+
+                <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
+                  Cerrar sesión
+                  
+                </span>
+              </button>
+
+              
             </Link>
           </NavbarItem>
         )}
       </NavbarContent>
 
+      
       <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <Link
-              className="w-full"
-              color={
-                index === 2
-                  ? "warning"
-                  : index === menuItems.length - 1
-                  ? "danger"
-                  : "foreground"
-              }
-              href="#"
-              size="lg"
-            >
-              {item}
+        <NavbarMenuItem>
+          <Link href="/" className="w-full" size="lg">
+            Inicio
+          </Link>
+        </NavbarMenuItem>
+
+        {userData && isHydrated && (
+          <>
+            <NavbarMenuItem>
+              <Link href="/dashboard" className="w-full" size="lg">
+                Perfil
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <button
+                onClick={() => {
+                  signOut();
+                  clearUserData();
+                }}
+                className="w-2.2/12 text-warning hover:text-danger"
+              >
+                Cerrar Sesión
+              </button>
+            </NavbarMenuItem>
+          </>
+        )}
+
+        {!userData && isHydrated && (
+          <NavbarMenuItem>
+            <Link href="/auth" className="w-full text-danger" size="lg">
+              Iniciar Sesión
             </Link>
           </NavbarMenuItem>
-        ))}
+        )}
       </NavbarMenu>
     </Navbar>
   );

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "@heroui/react";
 import { Plus, Building, Boxes, LineChart } from "lucide-react";
 
 export default function Home() {
