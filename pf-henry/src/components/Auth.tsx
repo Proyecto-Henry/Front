@@ -288,9 +288,7 @@ const SlideLoginForm: React.FC = () => {
               <p className="error">{signupErrors.password.message}</p>
             )}
 
-            <button id="btn" type="submit">
-              Registrarse
-            </button>
+            <button type="submit">Registrarse</button>
           </form>
         </div>
 
@@ -326,9 +324,7 @@ const SlideLoginForm: React.FC = () => {
               <p className="error">{loginErrors.password.message}</p>
             )}
 
-            <button id="btn" type="submit">
-              Ingresar
-            </button>
+            <button type="submit">Ingresar</button>
           </form>
         </div>
       </div>

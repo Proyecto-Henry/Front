@@ -3,7 +3,7 @@ import { Plus, Building, Boxes, LineChart } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white !important px-4 py-8">
+    <main className="bg-white min-h-screen flex flex-col items-center justify-center px-4 py-8">
       <section className="max-w-6xl w-full flex flex-col items-center">
         <div className="w-full flex flex-col lg:flex-row items-center justify-between">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 w-full lg:w-1/2">
@@ -33,7 +33,7 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default hover:scale-110">
               <Plus
                 size={32}
                 className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
@@ -43,7 +43,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default hover:scale-110">
               <Building
                 size={32}
                 className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
@@ -53,7 +53,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default hover:scale-110">
               <Boxes
                 size={32}
                 className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
@@ -63,7 +63,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default">
+            <div className="group border border-[#3c3744] rounded-lg p-4 flex flex-col items-center transition hover:border-[#3066BE] shadow-md hover:shadow-lg cursor-default hover:scale-110">
               <LineChart
                 size={32}
                 className="mb-2 text-[#3c3744] group-hover:text-[#3066BE] transition-colors"
