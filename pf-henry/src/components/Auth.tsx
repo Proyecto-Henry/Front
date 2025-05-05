@@ -134,13 +134,15 @@ const SlideLoginForm: React.FC = () => {
           const responseData = await res.json();
 
           setUserData({
-            googleId: session.user.googleId,
-            name: session.user.name,
-            email: session.user.email,
+            user: {
+              googleId: session.user.googleId,
+              name: session.user.name,
+              email: session.user.email,
+            },
           });
           toast.success(responseData.message || "Inicio de sesión exitoso");
 
-          router.push("/");
+          router.push("/admin");
 
           console.log("Respuesta del backend:", responseData);
         } catch (error) {
@@ -203,7 +205,7 @@ const SlideLoginForm: React.FC = () => {
       if (response) {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
-        router.push("/");
+        router.push("/admin");
         reset();
       }
     } catch (error) {
@@ -288,7 +290,9 @@ const SlideLoginForm: React.FC = () => {
               <p className="error">{signupErrors.password.message}</p>
             )}
 
-            <button type="submit">Registrarse</button>
+            <button id="btn" type="submit">
+              Registrarse
+            </button>
           </form>
         </div>
 
@@ -324,7 +328,9 @@ const SlideLoginForm: React.FC = () => {
               <p className="error">{loginErrors.password.message}</p>
             )}
 
-            <button type="submit">Ingresar</button>
+            <button id="btn" type="submit">
+              Ingresar
+            </button>
           </form>
         </div>
       </div>

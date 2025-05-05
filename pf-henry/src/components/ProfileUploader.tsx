@@ -72,11 +72,12 @@
 
 // pages/dashboard.tsx
 
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import useUserDataStore from '../store';
-import { Upload } from "lucide-react"
+import React, { useEffect, useState } from "react";
+import useUserDataStore from "../store";
+import { Image } from "@heroui/react";
+// import { apiUrl } from "@/services/config";
 
 // interface ImageUploadCardProps {
 //   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -115,29 +116,31 @@ const UploadImageAdmin: React.FC = () => {
     setError(null);
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/files/uploadImageAdmin/${userData.user.id}`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
-        body: formData,
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/files/uploadImageAdmin/${userData.user.id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!res.ok) {
-        throw new Error('Error al subir la imagen');
+        throw new Error("Error al subir la imagen");
       }
 
       const data = await res.json();
-      console.log('Respuesta del backend:', data);
-
+      console.log("Respuesta del backend:", data);
 
       setPreviewUrl(data.img_profile);
       setUserData({ ...userData, img_profile: data.img_profile });
     } catch (err) {
-        console.error('Error en uploadImageAdmin:', err);
+      console.error("Error en uploadImageAdmin:", err);
       setError((err as Error).message);
     } finally {
       setUploading(false);
@@ -149,21 +152,23 @@ const UploadImageAdmin: React.FC = () => {
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
       <button onClick={handleUpload} disabled={!selectedFile || uploading}>
-        {uploading ? 'Subiendo...' : 'Subir Imagen'}
+        {uploading ? "Subiendo..." : "Subir Imagen"}
       </button>
 
       {previewUrl && (
-        <div style={{ marginTop: '1rem' }}>
+        <div style={{ marginTop: "1rem" }}>
           <p>Imagen:</p>
-          <img src={previewUrl} alt="Imagen de perfil" style={{ width: 200, height: 'auto', borderRadius: 8 }} />
+          <Image
+            src={previewUrl}
+            alt="Imagen de perfil"
+            style={{ width: 200, height: "auto", borderRadius: 8 }}
+          />
         </div>
       )}
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };
 
 export default UploadImageAdmin;
-
-
