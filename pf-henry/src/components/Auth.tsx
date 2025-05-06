@@ -133,13 +133,7 @@ const SlideLoginForm: React.FC = () => {
 
           const responseData = await res.json();
 
-          setUserData({
-            user: {
-              googleId: session.user.googleId,
-              name: session.user.name,
-              email: session.user.email,
-            },
-          });
+          setUserData(responseData);
           toast.success(responseData.message || "Inicio de sesión exitoso");
 
           router.push("/admin");

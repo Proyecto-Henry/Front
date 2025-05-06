@@ -97,7 +97,7 @@ export default function AdminDashboard() {
               </div>
               <div className="text-center">
                 <p className="text-lg font-medium text-gray-800 mb-2">
-                  {userData?.user.email}
+                  {/* {userData?.user.email} */}
                 </p>
                 <div className="bg-blue-100 px-4 py-2 rounded-full">
                   <p className="text-blue-800 font-medium">
