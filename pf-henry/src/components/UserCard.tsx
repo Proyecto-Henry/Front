@@ -10,11 +10,11 @@ export const UserCard = ({ admin, onStatusChange }: Props) => (
     <div className="flex justify-between items-center mb-2">
       <h4 className="font-bold text-lg">{admin.name}</h4>
       <span className={`px-3 py-1 rounded-full text-xs ${
-        admin.subscription.status === "premium" 
+        admin.subscription?.status === "premium" 
           ? "bg-purple-100 text-purple-800" 
           : "bg-blue-100 text-blue-800"
       }`}>
-        {admin.subscription.status === "premium" ? "Premium" : "Básico"}
+        {admin.subscription?.status === "premium" ? "Premium" : "Básico"}
       </span>
     </div>
 
@@ -34,7 +34,7 @@ export const UserCard = ({ admin, onStatusChange }: Props) => (
         <span className="font-medium">Sucursales:</span> {admin.storesCount}
       </p>
       
-      {admin.subscription.start_date ? (
+      {admin.subscription?.start_date ? (
         <p>
           <span className="font-medium">Última actualización:</span> {new Date(admin.subscription.start_date).toLocaleDateString()}
         </p>
