@@ -1,95 +1,72 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import SucursalCard from "./Card";
 import useUserDataStore from "@/store";
 import ProfileUploader from "./ProfileUploader";
-
-interface IAdmin {
-  name: string;
-  email: string;
-  cantsucursales: number;
-}
-
-// const userData: IAdmin ={
-//   name: "Cristian",
-//   email: "cristian@mail.com",
-//   cantsucursales: 3
-// }
+import { apiUrl } from "@/services/config";
+// import { Spinner } from "@heroui/react";
+import Link from "next/link";
+// import { Plus } from "lucide-react";
 
 interface ISucursal {
-  nombre: string;
-  direccion: string;
+  id: string;
+  name: string;
+  address: string;
   email: string;
   password: string;
+  img_store?: string; // opcional, en caso de que venga desde el backend
 }
 
-const sucursales: ISucursal[] = [
-  // {
-  //   nombre: "sucursal buenos aires",
-  //   direccion: "Calle Falsa 123",
-  //   email: "cristian@example.com",
-  //   password: "password123"
-  // },
-  // {
-  //   nombre: "sucursal rosario",
-  //   direccion: "Av. Libertador 456",
-  //   email: "tomas@example.com",
-  //   password: "securePass456"
-  // },
-  // {
-  //   nombre: "sucursal colombia",
-  //   direccion: "Boulevard Central 789",
-  //   email: "elias@example.com",
-  //   password: "c4rlos789"
-  // }
-];
-
 export default function AdminDashboard() {
-  // const [userData, setUserData] = useState<IAdmin | null>(null)
+  const { userData, setSucursales, sucursales } = useUserDataStore();
 
-  // useEffect(() => {
-  //   const fetchDataBranch = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:3001/admin")
-  //       const data = await response.json()
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  //       if (!response.ok) {
-  //         throw new Error(data.message || "Error al obtener datos del admin")
-  //       }
+  async function getStoresByAdmin(
+    admin_id: string,
+    token: string
+  ): Promise<ISucursal[]> {
+    const res = await fetch(`${apiUrl}/stores/admin/${admin_id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  //       setUserData(data)
-  //     } catch (error) {
-  //       console.error("Error en fetchDataBranch:", error)
-  //     }
-  //   }
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Error al obtener las sucursales");
+    }
 
-  //   fetchDataBranch()
-  // }, [])
+    const data = await res.json();
+    return Array.isArray(data) ? data : [data];
+  }
 
-  const { userData } = useUserDataStore();
+  useEffect(() => {
+    if (userData?.user?.id && userData?.token) {
+      const admin_id = userData.user.id;
+      const token = userData.token;
+
+      getStoresByAdmin(admin_id, token)
+        .then((data) => {
+          setSucursales(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setLoading(false);
+        });
+    }
+  }, [userData, setSucursales]);
 
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 bg-gradient-to-b from-[#f9f9fd] to-[#4470af] p-6">
         <div className="max-w-6xl mx-auto flex flex-col items-center">
           <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-            HOLA {userData?.user?.name}{" "}
+            HOLA {userData?.user?.name}
           </h1>
-
-          {/* <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 mb-12 w-full mx-auto">
-      <ProfileUploader />
-            <div className="text-center space-y-2">
-              <p className="text-lg">{userData?.user.email}</p>
-              <p className="text-lg">
-                tienes {userData?.cantsucursales} sucursales
-              </p>
-            </div>
-          </div> */}
-
           <div className="flex flex-col items-center justify-center bg-white/90 rounded-xl shadow-lg p-8 mb-12 w-full max-w-md">
             <div className="flex flex-col items-center gap-4">
               <div className="mb-2">
@@ -97,46 +74,62 @@ export default function AdminDashboard() {
               </div>
               <div className="text-center">
                 <p className="text-lg font-medium text-gray-800 mb-2">
-                  {/* {userData?.user.email} */}
+                  Email: {userData?.user?.email}
                 </p>
                 <div className="bg-blue-100 px-4 py-2 rounded-full">
                   <p className="text-blue-800 font-medium">
-                    Tienes {userData?.cantsucursales} sucursales
+                    Cantidad de Sucursales: {sucursales.length}
                   </p>
                 </div>
               </div>
             </div>
           </div>
+          {/* <div className="flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-lg shadow-md transition-shadow duration-300 p-4 h-80 hover:shadow-lg">
+            <SucursalCard />
 
-          <div className="flex flex-wrap gap-4">
-            {sucursales && sucursales.length > 0 ? (
+            <p className="mt-4 text-gray-600 font-semibold text-center">
+              Agregar nueva sucursal
+            </p>
+          </div> */}
+          {/* <div className="w-full h-1 bg-black mb-6"></div> */}
+          <div className="w-full px-4 sm:px-8">
+            {loading ? (
+              <div className="flex items-center justify-center">
+                {/* <Spinner /> */}
+              </div>
+            ) : error ? (
+              <p className="text-white text-lg text-center">
+                No tines tiendas, agrega una
+              </p>
+            ) : sucursales.length === 0 ? (
               <>
-                {sucursales.map((card, index) => (
-                  <div key={index} className="flex justify-center">
-                    <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-64">
-                      <h3 className="text-lg font-medium text-center mb-8">
-                        {card.nombre}
-                      </h3>
-                      <div className="flex justify-center">
-                        <button className="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition">
-                          Ver detalle
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                <div className="flex justify-center w-80">
-                  <SucursalCard />
-                </div>
+                <p className="text-white text-lg text-center">
+                  No tienes ninguna sucursal registrada aún.
+                </p>
               </>
             ) : (
-              <>
-                <div className="flex justify-center w-80">
-                  <SucursalCard />
-                </div>
-              </>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {sucursales.map((sucursal) => (
+                  <Link
+                    href={`/sucursal/${sucursal.id}`}
+                    key={sucursal.id}
+                    className="flex flex-col items-center justify-center w-64 h-80 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                  >
+                    <h2 className="text-lg font-semibold">{sucursal.name}</h2>
+                    <p className="text-gray-600 text-sm text-center">
+                      {sucursal.address}
+                    </p>
+                  </Link>
+                ))}
+              </div>
             )}
+          </div>
+          <div className="flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-lg shadow-md transition-shadow duration-300 p-4 h-80 hover:shadow-lg">
+            <SucursalCard />
+
+            <p className="mt-4 text-gray-600 font-semibold text-center">
+              Agregar nueva sucursal
+            </p>
           </div>
         </div>
       </main>

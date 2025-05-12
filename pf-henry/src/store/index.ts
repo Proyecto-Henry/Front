@@ -4,7 +4,9 @@ import { createJSONStorage, devtools, persist } from "zustand/middleware";
 interface ISafeStockStore {
   userData: any;
   isHydrated: boolean;
+  sucursales: any[];
 
+  setSucursales: (sucursales: any[]) => void;
   setUserData: (data: any) => void;
   setHydrated: (state: boolean) => void;
   clearUserData: () => void;
@@ -15,12 +17,15 @@ const useUserDataStore = create<ISafeStockStore>()(
   devtools(
     persist(
       (set) => ({
+        sucursales: [],
         userData: null,
         isHydrated: false,
 
+        setSucursales: (sucursales) => set({ sucursales }),
         setUserData: (data) => set({ userData: data }),
         setHydrated: (state) => set({ isHydrated: state }),
-        clearUserData: () => set({ userData: null, isHydrated: false }),
+        clearUserData: () =>
+          set({ userData: null, isHydrated: false, sucursales: [] }),
       }),
       {
         name: "safeStock-store",

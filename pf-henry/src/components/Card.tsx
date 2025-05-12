@@ -1,65 +1,191 @@
-"use client"
+// "use client"
 
-import { Plus } from "lucide-react"
+// import { Plus } from "lucide-react"
+// import { useState } from "react";
+// import Modal from "./Modal";
+
+// export default function SucursalCard() {
+
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   return (
+
+//     <div className="flex justify-center">
+//     <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-64">
+//       <h3 className="text-lg font-medium text-center mb-8">Sucursal</h3>
+//       <div className="flex justify-center">
+//         <button className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"
+//         onClick={() => setIsModalOpen(true)}
+//         >
+//           <Plus className="w-5 h-5" />
+//         </button>
+//         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+//          <form className="flex flex-col gap-4">
+//            <p className="text-black text-[2.3em] flex justify-center mx-auto mt-10 mb-2 font-bold">Crear Sucursal</p>
+//            <input type="text" placeholder="Nombre" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none"/* className="border p-2 rounded" */ />
+//            <input type="address" placeholder="Direcion" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
+//            <input type="email" placeholder="Email" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
+//            <input type="password" placeholder="Contraseña" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
+//            <button type="submit" className="w-[60%] h-[40px] bg-[#4470af] flex justify-center items-center mx-auto px-4 py-2 rounded-[5px] text-white text-[15px] font-bold cursor-pointer border-none outline-none transition ease-in duration-500"/* className="bg-green-600 text-white px-4 py-2 rounded */>
+//             Crear
+//            </button>
+
+//          </form>
+//        </Modal>
+//       </div>
+//     </div>
+//   </div>
+//   )
+// }
+"use client";
+
+import { Plus } from "lucide-react";
 import { useState } from "react";
-import Modal from "./Modal";
+// import Modal from "./Modal";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { apiUrl } from "../services/config";
+import useUserDataStore from "../store";
+import ModalCreate from "@/utils/Modal";
+// import ModalCreate from "@/utils/Modal";
+
+export interface IRegisterForm {
+  name: string;
+  address: string;
+  email: string;
+  password: string;
+}
+
+export async function registerUser(userData: IRegisterForm, token: string) {
+  try {
+    const res = await fetch(`${apiUrl}/auth/signUpStore`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Error al registrar la sucursal");
+    }
+
+    return await res.json();
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
 
 export default function SucursalCard() {
-
+  const { userData } = useUserDataStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<IRegisterForm>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const onSubmit = async (data: IRegisterForm) => {
+    try {
+      const response = await registerUser(data, userData?.token || "");
+      if (response) {
+        toast.success("Sucursal creada correctamente");
+        reset();
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
+
   return (
-    // <Card className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-64"/* className="max-w-[240px] bg-gray-200 bg-opacity-80 shadow-sm" */>
-    //   <CardHeader className="text-lg font-medium text-center mb-8">
-    //     <h2 className="text-lg font-medium text-center mb-8">Sucursal</h2>
-    //   </CardHeader>
-    //   <main className="flex items-center justify-center py-6">
-    //     <button /* size="sm" */ className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"/* className="h-16 w-12 rounded-full bg-blue-500 hover:bg-blue-600" */
-    //       onClick={() => setIsModalOpen(true)}
-    //       // className="bg-blue-600 text-white px-4 py-2 rounded"
-    //       >
-    //       <Plus className="h-6 w-6" />
-    //       <span className="sr-only">Añadir sucursal</span>
-    //     </button>
-    //     <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-    //     <form className="flex flex-col gap-4">
-    //       <p className="text-black text-[2.3em] flex justify-center mx-auto mt-10 mb-2 font-bold">Crear Sucursal</p>
-    //       <input type="text" placeholder="Nombre" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none"/* className="border p-2 rounded" */ />
-    //       <input type="address" placeholder="Direcion" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
-    //       <input type="email" placeholder="Email" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
-    //       <input type="password" placeholder="Contraseña" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
-    //       <button type="submit" className="w-[60%] h-[40px] bg-[#4470af] flex justify-center items-center mx-auto px-4 py-2 rounded-[5px] text-white text-[15px] font-bold cursor-pointer border-none outline-none transition ease-in duration-500"/* className="bg-green-600 text-white px-4 py-2 rounded */>
-    //        Crear
-    //       </button>
-
-    //     </form>
-    //   </Modal>
-    //   </main>
-    // </Card>
-    <div className="flex justify-center">
-    <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-64">
-      <h3 className="text-lg font-medium text-center mb-8">Sucursal</h3>
+    <>
       <div className="flex justify-center">
-        <button className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"
-        onClick={() => setIsModalOpen(true)}
-        >
-          <Plus className="w-5 h-5" />
-        </button>
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-         <form className="flex flex-col gap-4">
-           <p className="text-black text-[2.3em] flex justify-center mx-auto mt-10 mb-2 font-bold">Crear Sucursal</p>
-           <input type="text" placeholder="Nombre" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none"/* className="border p-2 rounded" */ />
-           <input type="address" placeholder="Direcion" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
-           <input type="email" placeholder="Email" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
-           <input type="password" placeholder="Contraseña" className="w-[60%] h-[40px] bg-[#f0f3f974] flex justify-center mx-auto px-4 py-2 rounded-[5px] text-black text-[15px] border-none outline-none" />
-           <button type="submit" className="w-[60%] h-[40px] bg-[#4470af] flex justify-center items-center mx-auto px-4 py-2 rounded-[5px] text-white text-[15px] font-bold cursor-pointer border-none outline-none transition ease-in duration-500"/* className="bg-green-600 text-white px-4 py-2 rounded */>
-            Crear
-           </button>
-
-         </form>
-       </Modal>
+        <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-64">
+          <div className="flex justify-center">
+            <button
+              className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  )
+
+      <ModalCreate isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col items-center gap-4 p-4"
+        >
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+            Crear Sucursal
+          </h2>
+          <div className="w-full flex flex-col items-center gap-3">
+            <input
+              type="text"
+              placeholder="Nombre"
+              {...register("name", {
+                required: "Nombre requerido",
+                minLength: { value: 3, message: "Mínimo 3 caracteres" },
+              })}
+              className="w-[80%] h-[40px] bg-gray-100 px-4 py-2 rounded-md border text-black text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs">{errors.name.message}</p>
+            )}
+
+            <input
+              type="text"
+              placeholder="Dirección"
+              {...register("address", { required: "Dirección requerida" })}
+              className="w-[80%] h-[40px] bg-gray-100 px-4 py-2 rounded-md border text-black text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-xs">{errors.address.message}</p>
+            )}
+
+            <input
+              type="email"
+              placeholder="Email"
+              {...register("email", {
+                required: "Email requerido",
+                pattern: {
+                  value: /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/,
+                  message: "Email inválido",
+                },
+              })}
+              className="w-[80%] h-[40px] bg-gray-100 px-4 py-2 rounded-md border text-black text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs">{errors.email.message}</p>
+            )}
+
+            <input
+              type="password"
+              placeholder="Contraseña"
+              {...register("password", {
+                required: "Contraseña requerida",
+                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+              })}
+              className="w-[80%] h-[40px] bg-gray-100 px-4 py-2 rounded-md border text-black text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs">{errors.password.message}</p>
+            )}
+
+            <button
+              type="submit"
+              className="w-[80%] h-[40px] bg-blue-600 mt-2 px-4 py-2 rounded-md text-white font-bold hover:bg-blue-700 transition"
+            >
+              Crear
+            </button>
+          </div>
+        </form>
+      </ModalCreate>
+    </>
+  );
 }
