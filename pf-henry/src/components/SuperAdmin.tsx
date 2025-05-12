@@ -13,7 +13,6 @@ export const SuperAdmin = () => {
   const [admins, setAdmins] = useState<IAdmin[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Cargar datos iniciales
   useEffect(() => {
     const fetchData = async () => {
       try {

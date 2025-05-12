@@ -1,44 +1,38 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
+import { IProductModalProps } from "@/interfaces/interfaces";
 
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  stock: number;
-}
-
-interface ProductModalProps {
-  producto: Producto;
-  onClose: () => void;
-  onAddToCart: (producto: Producto, cantidad: number) => void;
-}
-
-export default function ProductModal({ producto, onClose, onAddToCart }: ProductModalProps) {
+export default function ProductModal({
+  producto,
+  onClose,
+  onAddToCart,
+}: IProductModalProps) {
   const [cantidad, setCantidad] = useState(1);
 
   const handleAgregar = () => {
-    onAddToCart(producto, cantidad); 
+    onAddToCart(producto, cantidad);
     onClose();
   };
 
   return (
     <>
-      <div 
+      <div
         className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
         onClick={onClose}
       />
-      
+
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl z-50 w-96 p-6">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-2xl font-bold">{producto.nombre}</h2>
-          <span className="text-2xl font-semibold">${producto.precio.toFixed(2)}</span>
+          <h2 className="text-2xl font-bold">{producto.name}</h2>
+          <span className="text-2xl font-semibold">
+            ${parseFloat(producto.price).toFixed(2)}
+          </span>
         </div>
-        
+
         <div className="mb-6">
           <p className="text-gray-600">Disponibles: {producto.stock}</p>
         </div>
-        
+
         <div className="flex items-center mb-6">
           <label className="mr-2">Cantidad:</label>
           <input
@@ -46,11 +40,15 @@ export default function ProductModal({ producto, onClose, onAddToCart }: Product
             min="1"
             max={producto.stock}
             value={cantidad}
-            onChange={(e) => setCantidad(Math.max(1, Math.min(producto.stock, Number(e.target.value))))}
+            onChange={(e) =>
+              setCantidad(
+                Math.max(1, Math.min(producto.stock, Number(e.target.value)))
+              )
+            }
             className="border rounded px-3 py-1 w-20"
           />
         </div>
-        
+
         <div className="flex justify-end space-x-3">
           <button
             onClick={onClose}

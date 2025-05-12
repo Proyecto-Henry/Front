@@ -1,38 +1,27 @@
-'use client';
-import { useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
-import { ProductSearchBar } from '@/components/ProductSearchBar';
-import ProductModal from '@/components/ProductModal';
-import CartModal from '@/components/CartModal';
-import { toast } from 'sonner';
+"use client";
+import { useState } from "react";
+import { ShoppingCart } from "lucide-react";
+import { ProductSearchBar } from "@/components/ProductSearchBar";
+import ProductModal from "@/components/ProductModal";
+import CartModal from "@/components/CartModal";
+import { toast } from "sonner";
+import { StoreService } from "@/services/storeService";
+import { IProducto, ISucursalProps, ICartItem } from "@/interfaces/interfaces";
 
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  stock: number;
-}
-
-interface CartItem extends Producto {
-  cantidad: number;
-}
-
-interface SucursalProps {
-  productos: Producto[];
-}
-
-export default function Sucursal({ productos }: SucursalProps) {
-  const [busqueda, setBusqueda] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
+export default function Sucursal({ productos, store_id }: ISucursalProps) {
+  const [busqueda, setBusqueda] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<IProducto | null>(
+    null
+  );
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  
-  const productosFiltrados = productos.filter(producto => 
-    producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  const [cart, setCart] = useState<ICartItem[]>([]);
+
+  const productosFiltrados = productos.filter((producto) =>
+    producto.name.toLowerCase().includes(busqueda.toLowerCase())
   );
 
-  const addToCart = (producto: Producto, cantidad: number) => {
-    const existingItem = cart.find(item => item.id === producto.id);
+  const addToCart = (producto: IProducto, cantidad: number) => {
+    const existingItem = cart.find((item) => item.id === producto.id);
     const totalCantidad = (existingItem?.cantidad || 0) + cantidad;
 
     if (totalCantidad > producto.stock) {
@@ -40,44 +29,46 @@ export default function Sucursal({ productos }: SucursalProps) {
       return;
     }
 
-    setCart(prevCart => {
+    setCart((prevCart) => {
       return existingItem
-        ? prevCart.map(item => 
-            item.id === producto.id 
-              ? { ...item, cantidad: totalCantidad } 
+        ? prevCart.map((item) =>
+            item.id === producto.id
+              ? { ...item, cantidad: totalCantidad }
               : item
           )
         : [...prevCart, { ...producto, cantidad }];
     });
 
-    toast.success(`Producto agregado con exíto`);
+    toast.success(`Producto agregado con éxito`);
   };
 
-  const removeFromCart = (productId: number) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
-    toast.info('Producto eliminado del carrito');
+  const removeFromCart = (productId: string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    toast.info("Producto eliminado del carrito");
   };
 
-  const updateQuantity = (productId: number, newQuantity: number) => {
+  const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    
-    const producto = cart.find(item => item.id === productId);
+
+    const producto = cart.find((item) => item.id === productId);
     if (!producto) return;
-    
+
     if (newQuantity > producto.stock) {
-      toast.error(`No hay suficiente stock. Máximo disponible: ${producto.stock}`);
+      toast.error(
+        `No hay suficiente stock. Máximo disponible: ${producto.stock}`
+      );
       return;
     }
 
-    setCart(prevCart =>
-      prevCart.map(item =>
+    setCart((prevCart) =>
+      prevCart.map((item) =>
         item.id === productId ? { ...item, cantidad: newQuantity } : item
       )
     );
   };
 
   const total = cart.reduce(
-    (sum, item) => sum + item.precio * item.cantidad,
+    (sum, item) => sum + parseFloat(item.price) * item.cantidad,
     0
   );
 
@@ -85,7 +76,7 @@ export default function Sucursal({ productos }: SucursalProps) {
     <div className="max-w-6xl mx-auto p-5 font-inter">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Sucursal</h1>
-        <button 
+        <button
           className="p-2 rounded-full hover:bg-gray-100 transition-colors relative"
           onClick={() => setIsCartOpen(true)}
         >
@@ -98,32 +89,45 @@ export default function Sucursal({ productos }: SucursalProps) {
         </button>
       </div>
 
-      <ProductSearchBar 
-        value={busqueda}
-        onChange={setBusqueda}
-      />
+      <ProductSearchBar value={busqueda} onChange={setBusqueda} />
 
       <div className="overflow-x-auto h-[calc(100vh-220px)] bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-[#3066BE] sticky top-0 z-10">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Producto</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Precio</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Stock</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Número
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Producto
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Precio
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Stock
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 overflow-y-auto">
-            {productosFiltrados.map((producto) => (
-              <tr 
-                key={producto.id} 
+            {productosFiltrados.map((producto, index) => (
+              <tr
+                key={producto.id}
                 className="hover:bg-gray-100 transition-colors cursor-pointer"
                 onClick={() => setSelectedProduct(producto)}
               >
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{producto.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{producto.nombre}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${producto.precio.toFixed(2)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{producto.stock}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                  {index + 1}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                  {producto.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                  ${parseFloat(producto.price).toFixed(2)}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                  {producto.stock}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -136,7 +140,7 @@ export default function Sucursal({ productos }: SucursalProps) {
       </div>
 
       {selectedProduct && (
-        <ProductModal 
+        <ProductModal
           producto={selectedProduct}
           onClose={() => setSelectedProduct(null)}
           onAddToCart={addToCart}
@@ -150,6 +154,31 @@ export default function Sucursal({ productos }: SucursalProps) {
           onClose={() => setIsCartOpen(false)}
           onRemove={removeFromCart}
           onUpdateQuantity={updateQuantity}
+          onCreateSale={async () => {
+            try {
+              const saleData = {
+                date: new Date().toISOString(),
+                sale_details: cart.map((item) => ({
+                  product_id: item.id,
+                  quantity: item.cantidad,
+                })),
+                store_id,
+              };
+
+              const response = await StoreService.createSale(saleData);
+
+              if (response && response.success) {
+                toast.success("Venta realizada con éxito");
+                setCart([]);
+                setIsCartOpen(false);
+              } else {
+                toast.error("Hubo un error al realizar la venta");
+              }
+            } catch (error) {
+              toast.error("Error al realizar la venta");
+              console.error(error);
+            }
+          }}
         />
       )}
     </div>

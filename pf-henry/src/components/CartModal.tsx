@@ -1,19 +1,6 @@
 'use client';
 import { Trash2, Plus, Minus, X } from 'lucide-react';
-
-interface CartModalProps {
-  cart: Array<{
-    id: number;
-    nombre: string;
-    precio: number;
-    cantidad: number;
-    stock: number;
-  }>;
-  total: number;
-  onClose: () => void;
-  onRemove: (productId: number) => void;
-  onUpdateQuantity: (productId: number, quantity: number) => void;
-}
+import { ICartModalProps } from '@/interfaces/interfaces';
 
 export default function CartModal({
   cart,
@@ -21,7 +8,8 @@ export default function CartModal({
   onClose,
   onRemove,
   onUpdateQuantity,
-}: CartModalProps) {
+  onCreateSale, 
+}: ICartModalProps) {
   return (
     <>
       <div 
@@ -58,7 +46,7 @@ export default function CartModal({
               {cart.map(item => (
                 <div key={item.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-gray-50">
                   <div className="col-span-6">
-                    <h3 className="font-medium">{item.nombre}</h3>
+                    <h3 className="font-medium">{item.name}</h3>
                     <p className="text-sm text-gray-500">Stock: {item.stock}</p>
                   </div>
                   
@@ -83,7 +71,7 @@ export default function CartModal({
                   </div>
                   
                   <div className="col-span-2 text-right font-medium">
-                    ${(item.precio * item.cantidad).toFixed(2)}
+                    ${parseFloat(item.price).toFixed(2)}
                   </div>
                   
                   <div className="col-span-2 text-right">
@@ -109,6 +97,7 @@ export default function CartModal({
               <span className="text-2xl">${total.toFixed(2)}</span>
             </div>
             <button
+              onClick={onCreateSale} 
               className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-lg font-medium"
               disabled={cart.length === 0}
             >
