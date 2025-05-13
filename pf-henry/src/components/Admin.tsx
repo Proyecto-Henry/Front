@@ -15,7 +15,7 @@ interface ISucursal {
   address: string;
   email: string;
   password: string;
-  img_store?: string; // opcional, en caso de que venga desde el backend
+  img_store?: string;
 }
 
 export default function AdminDashboard() {
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {sucursales.map((sucursal) => (
                   <Link
-                    href={`/sucursal/${sucursal.id}`}
+                    href={`/sucursalAdmin/${sucursal.id}`}
                     key={sucursal.id}
                     className="flex flex-col items-center justify-center w-64 h-80 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
                   >

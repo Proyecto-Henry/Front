@@ -10,7 +10,7 @@ function SucursalPage() {
       <main className="flex flex-row flex-wrap gap-8 row-start-2 items-center justify-center sm:items-start">
         {dataMock?.map((sucursal: Isucursal) => (
           <Link
-            href={`/sucursal/${sucursal.id}`}
+            href={`/sucursalAdmin/${sucursal.id}`}
             key={sucursal.id}
             className="flex flex-col items-center justify-center w-64 h-80 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
           >
