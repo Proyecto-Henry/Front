@@ -10,110 +10,38 @@ import { toast } from "sonner";
 import { ILoginForm, IRegisterForm } from "@/interfaces/interfaces";
 import { useRouter } from "next/navigation";
 
-import { Image, Spinner } from "@heroui/react";
+import { Image, Spinner, user } from "@heroui/react";
 import { signIn, useSession } from "next-auth/react";
-// import { sendGoogleUserToBackend } from "@/services/authGoogle";
-// import axios from "axios";
 import { apiUrl } from "@/services/config";
 import useUserDataStore from "@/store";
 
 const SlideLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
-  // const hasSentGoogleDataRef = useRef(false);
+  const [isLoadingSignup, setIsLoadingSignup] = React.useState(false);
+  const [isLoadingLogin, setIsLoadingLogin] = React.useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
   console.log("Session:", session);
-  // console.log("Session user: PRUEBA", session.user.email);
 
   const router = useRouter();
-  const { setUserData } = useUserDataStore();
+  const { setUserData, userData } = useUserDataStore();
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
-    formState: { errors: loginErrors, isSubmitting: isSubmittingLogin },
+    formState: { errors: loginErrors },
   } = useForm<ILoginForm>();
 
   const {
     register: registerSignup,
     handleSubmit,
-    formState: { errors: signupErrors, isSubmitting: isSubmittingSignup },
+    formState: { errors: signupErrors },
     reset,
   } = useForm<IRegisterForm>();
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     if (status !== "authenticated" || !session?.user) {
-  //       toast.error(
-  //         "No se pudo obtener la sesión de Google. Intenta nuevamente."
-  //       );
-  //       console.error("Sesión indefinida tras 2 segundos.");
-  //     }
-  //   }, 2000);
-
-  //   const sendGoogleUserToBackend = async () => {
-  //     if (
-  //       status === "authenticated" &&
-  //       session?.user &&
-  //       !hasSentGoogleDataRef.current
-  //     ) {
-  //       clearTimeout(timeoutId);
-  //       hasSentGoogleDataRef.current = true;
-
-  //       try {
-  //         const response = await axios.post(`${apiUrl}/auth/signinGoogle`, {
-  //           googleId: session.user.googleId,
-  //           name: session.user.name,
-  //           email: session.user.email,
-
-  //           // name: session.user.name,
-  //           // email: session.user.email,
-  //           // image: session.user.image,
-  //         });
-
-  //         setUserData(response.data.userData);
-  //         toast.success("Inicio de sesión con Google exitoso");
-  //         router.push("/");
-  //       } catch (error) {
-  //         toast.error("Error al autenticar con Google en el backend");
-  //         console.error(error);
-  //       }
-  //     }
-  //   };
-
-  //   sendGoogleUserToBackend();
-
-  //   return () => clearTimeout(timeoutId);
-  // }, [session, status, router, setUserData]);
-  //////////////////////////////////////////////////////////!
-  // useEffect(() => {
-  //   if (session?.user && status === "authenticated") {
-  //     fetch(`${apiUrl}/auth/signinGoogle`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         googleId: session.user.googleId,
-  //         name: session.user.name,
-  //         email: session.user.email,
-  //       }),
-  //     })
-  //       .then((res) => {
-  //         if (!res.ok) {
-  //           throw new Error(`Error ${res.status}: ${res.statusText}`);
-  //         }
-
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //         setUserData(data);
-  //         console.log("Respuesta del backend:", data);
-  //       })
-  //       .catch((error) => console.error("Error al enviar datos:", error));
-  //   }
-  // }, [session, status, setUserData]);
   //////////////////////////////////////////////////////////!
   useEffect(() => {
     if (session?.user && status === "authenticated") {
       const sendGoogleUserToBackend = async () => {
+        setIsLoadingGoogle(true);
         try {
           const res = await fetch(`${apiUrl}/auth/signinGoogle`, {
             method: "POST",
@@ -142,6 +70,8 @@ const SlideLoginForm: React.FC = () => {
         } catch (error) {
           toast.error("Error al autenticar con Google");
           console.error("Error al enviar datos:", error);
+        } finally {
+          setIsLoadingGoogle(false);
         }
       };
 
@@ -149,7 +79,12 @@ const SlideLoginForm: React.FC = () => {
     }
   }, [session, status, setUserData, router]);
 
-  if (isSubmittingLogin || isSubmittingSignup || status === "loading") {
+  if (
+    isLoadingLogin ||
+    isLoadingSignup ||
+    isLoadingGoogle ||
+    status === "loading"
+  ) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
         <Spinner />
@@ -157,26 +92,8 @@ const SlideLoginForm: React.FC = () => {
     );
   }
 
-  if (isSubmittingLogin) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <div className="flex flex-col items-center gap-4">
-          <Spinner />
-        </div>
-      </div>
-    );
-  }
-  if (isSubmittingSignup) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <div className="flex flex-col items-center gap-4">
-          <Spinner />
-        </div>
-      </div>
-    );
-  }
-
   const onSignupSubmit = async (data: IRegisterForm) => {
+    setIsLoadingSignup(true);
     try {
       const response = await registerUser(data);
       console.log("Response:", response);
@@ -188,22 +105,32 @@ const SlideLoginForm: React.FC = () => {
       }
     } catch (error) {
       toast.error((error as Error).message || "Error al registrar el usuario");
+    } finally {
+      setIsLoadingSignup(false);
     }
   };
 
   const onLoginSubmit = async (data: ILoginForm) => {
+    setIsLoadingLogin(true);
     try {
       const response = await loginUser(data);
       console.log("Response:", response);
 
-      if (response) {
+      if (response && response.role === "admin") {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
         router.push("/admin");
         reset();
+      } else if (response && response.role === "user") {
+        toast.success("Usuario logeado correctamente");
+        setUserData(response);
+        router.push(`/sucursal/${userData.user.id}`);
+        reset();
       }
     } catch (error) {
       toast.error((error as Error).message || "Error al logear el usuario");
+    } finally {
+      setIsLoadingLogin(false);
     }
     console.log("Login Data:", data);
   };
