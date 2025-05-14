@@ -103,3 +103,10 @@ interface ISucursales {
   img_profile: string;
   name: string;
 }
+
+export interface ISession {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  googleId?: string;
+}

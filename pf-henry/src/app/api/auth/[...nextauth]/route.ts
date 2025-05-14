@@ -1,5 +1,7 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { NextAuthOptions } from "next-auth";
+import { ISession } from "@/interfaces/interfaces";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -10,8 +12,8 @@ export const nextAuthOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
-      if (token.sub) {
-        session.user.googleId = token.sub;
+      if (token.sub && session.user) {
+        (session.user as ISession).googleId = token.sub;
       }
       return session;
     },
