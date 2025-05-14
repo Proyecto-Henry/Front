@@ -74,7 +74,7 @@ export default function App() {
               <button
                 className="relative group flex items-center justify-center p-2"
                 onClick={() => {
-                  signOut();
+                  signOut({ callbackUrl: "/" });
                   clearUserData();
                 }}
               >
@@ -82,17 +82,13 @@ export default function App() {
 
                 <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
                   Cerrar sesión
-                  
                 </span>
               </button>
-
-              
             </Link>
           </NavbarItem>
         )}
       </NavbarContent>
 
-      
       <NavbarMenu>
         <NavbarMenuItem>
           <Link href="/" className="w-full" size="lg">
@@ -110,7 +106,7 @@ export default function App() {
             <NavbarMenuItem>
               <button
                 onClick={() => {
-                  signOut();
+                  signOut({ callbackUrl: "/" });
                   clearUserData();
                 }}
                 className="w-2.2/12 text-warning hover:text-danger"

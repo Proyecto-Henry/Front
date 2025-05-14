@@ -9,7 +9,7 @@ export interface ILoginForm {
   password: string;
 }
 
-export interface ProtectedPageProps{
+export interface ProtectedPageProps {
   children: React.ReactNode;
 }
 
@@ -17,11 +17,11 @@ export interface IAdmin {
   id: string;
   email: string;
   name: string;
-  status: 'active' | 'inactive'; 
+  status: "active" | "inactive";
   storesCount: number;
   subscription: {
-    status: string; 
-    start_date: string; 
+    status: string;
+    start_date: string;
   };
 }
 
@@ -54,7 +54,7 @@ export interface IPropsSearchBar {
 export interface IProducto {
   id: string;
   name: string;
-  price: string; 
+  price: string;
   stock: number;
   stock_min: number;
   status: boolean;
@@ -72,5 +72,34 @@ export interface ICartItem extends IProducto {
 
 export interface ISucursalProps {
   productos: IProducto[];
-  store_id: string; 
+  store_id: string;
+}
+
+export interface ISafeStockStore {
+  userData: IuserData | null;
+  isHydrated: boolean;
+  sucursales: ISucursales[];
+
+  setSucursales: (sucursales: ISucursales[]) => void;
+  setUserData: (data: IuserData) => void;
+  setHydrated: (state: boolean) => void;
+  clearUserData: () => void;
+}
+
+interface IuserData {
+  mesage: string;
+  token: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
+
+interface ISucursales {
+  id: string;
+  adress: string;
+  img_profile: string;
+  name: string;
 }

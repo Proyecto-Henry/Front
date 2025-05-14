@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { ILoginForm, IRegisterForm } from "@/interfaces/interfaces";
 import { useRouter } from "next/navigation";
 
-import { Image, Spinner, user } from "@heroui/react";
+import { Image, Spinner } from "@heroui/react";
 import { signIn, useSession } from "next-auth/react";
 import { apiUrl } from "@/services/config";
 import useUserDataStore from "@/store";
@@ -116,15 +116,15 @@ const SlideLoginForm: React.FC = () => {
       const response = await loginUser(data);
       console.log("Response:", response);
 
-      if (response && response.role === "admin") {
+      if (response && response.user.role === "admin") {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
         router.push("/admin");
         reset();
-      } else if (response && response.role === "user") {
+      } else if (response && response.user.role === "user") {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
-        router.push(`/sucursal/${userData.user.id}`);
+        router.push(`/sucursal/${userData?.user.id}`);
         reset();
       }
     } catch (error) {
