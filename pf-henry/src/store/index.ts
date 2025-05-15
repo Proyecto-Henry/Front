@@ -1,7 +1,6 @@
 import { ISafeStockStore } from "@/interfaces/interfaces";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
-
 // Add isHydrated flag to track when the store has been hydrated from storage
 const useUserDataStore = create<ISafeStockStore>()(
   devtools(
@@ -10,12 +9,14 @@ const useUserDataStore = create<ISafeStockStore>()(
         sucursales: [],
         userData: null,
         isHydrated: false,
+        dataUser: null,
 
+        setDataUser:(dataUser) => set({dataUser}),
         setSucursales: (sucursales) => set({ sucursales }),
         setUserData: (data) => set({ userData: data }),
         setHydrated: (state) => set({ isHydrated: state }),
         clearUserData: () =>
-          set({ userData: null, isHydrated: false, sucursales: [] }),
+          set({ userData: null, isHydrated: false, sucursales: [], dataUser:null}),
       }),
       {
         name: "safeStock-store",

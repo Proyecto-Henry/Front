@@ -55,8 +55,8 @@ export interface IProducto {
   id: string;
   name: string;
   price: string;
-  stock: number;
   stock_min: number;
+  stock: number;
   status: boolean;
 }
 
@@ -79,7 +79,9 @@ export interface ISafeStockStore {
   userData: IuserData | null;
   isHydrated: boolean;
   sucursales: ISucursales[];
+  dataUser: null | IDataUser;
 
+  setDataUser: (dataUser: IDataUser) => void;
   setSucursales: (sucursales: ISucursales[]) => void;
   setUserData: (data: IuserData) => void;
   setHydrated: (state: boolean) => void;
@@ -103,3 +105,12 @@ interface ISucursales {
   img_profile: string;
   name: string;
 }
+
+export interface IDataUser {
+  id: string;
+  name: string;
+  adress: string;
+  img_profile: string;
+  products: IProducto[]
+}
+

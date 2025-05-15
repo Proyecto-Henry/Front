@@ -1,24 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { ProductSearchBar } from "@/components/ProductSearchBar";
 import ProductModal from "@/components/ProductModal";
 import CartModal from "@/components/CartModal";
 import { toast } from "sonner";
-import { StoreService } from "@/services/storeService";
-import { IProducto, ISucursalProps, ICartItem } from "@/interfaces/interfaces";
+import { IProducto, ICartItem } from "@/interfaces/interfaces";
+import useUserDataStore from "@/store";
+import { apiUrl } from "@/services/config";
+import { notFound } from "next/navigation";
 
-export default function Sucursal({ productos, store_id }: ISucursalProps) {
-  const [busqueda, setBusqueda] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState<IProducto | null>(
-    null
-  );
+interface Props {
+  id: string;
+}
+
+export default function Sucursal({ id }: Props) {
+  const { userData, dataUser, setDataUser } = useUserDataStore();
+  const [productos, setProductos] = useState<IProducto[]>([]);
+  const [sucursalNombre, setSucursalNombre] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<IProducto | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cart, setCart] = useState<ICartItem[]>([]);
+  const [busqueda, setBusqueda] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const productosFiltrados = productos.filter((producto) =>
-    producto.name.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchSucursal = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/stores/user/${id}`);
+        if (!res.ok) return notFound();
+        const data = await res.json();
+        setDataUser(data);
+        setSucursalNombre(data.name);
+        setProductos(data.products);
+      } catch (error) {
+        console.error("Error al obtener sucursal:", error);
+      }
+    };
+
+    fetchSucursal();
+  }, [id, setDataUser]);
 
   const addToCart = (producto: IProducto, cantidad: number) => {
     const existingItem = cart.find((item) => item.id === producto.id);
@@ -72,10 +93,62 @@ export default function Sucursal({ productos, store_id }: ISucursalProps) {
     0
   );
 
+  const onCreateSale = async () => {
+  
+    if (isSubmitting) return;
+    try {
+      setIsSubmitting(true);
+      const saleData = {
+        date: new Date().toISOString(),
+        sale_details: cart.map((item) => ({
+          product_id: item.id,
+          quantity: item.cantidad,
+        })),
+        store_id: dataUser?.id,
+       
+      };
+      console.log(dataUser?.id)
+      console.log("SALE DATA", saleData);
+      const res = await fetch(`${apiUrl}/sales`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${userData?.token}`,
+        },
+        body: JSON.stringify(saleData),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al realizar la venta");
+      }
+      toast.success("Venta realizada con éxito");
+      setCart([]);
+      setIsCartOpen(false);
+
+      setProductos((prev) =>
+        prev.map((p) => {
+          const sold = cart.find((i) => i.id === p.id);
+          return sold ? { ...p, stock: p.stock - sold.cantidad } : p;
+        })
+      );
+    } catch (error) {
+      toast.error("Error al realizar la venta");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const productosFiltrados = productos.filter(
+    (producto) =>
+      producto.stock > 0 &&
+      producto.name.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <div className="max-w-6xl mx-auto p-5 font-inter">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Sucursal</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Sucursal: {sucursalNombre}</h1>
         <button
           className="p-2 rounded-full hover:bg-gray-100 transition-colors relative"
           onClick={() => setIsCartOpen(true)}
@@ -154,31 +227,8 @@ export default function Sucursal({ productos, store_id }: ISucursalProps) {
           onClose={() => setIsCartOpen(false)}
           onRemove={removeFromCart}
           onUpdateQuantity={updateQuantity}
-          onCreateSale={async () => {
-            try {
-              const saleData = {
-                date: new Date().toISOString(),
-                sale_details: cart.map((item) => ({
-                  product_id: item.id,
-                  quantity: item.cantidad,
-                })),
-                store_id,
-              };
-
-              const response = await StoreService.createSale(saleData);
-
-              if (response && response.success) {
-                toast.success("Venta realizada con éxito");
-                setCart([]);
-                setIsCartOpen(false);
-              } else {
-                toast.error("Hubo un error al realizar la venta");
-              }
-            } catch (error) {
-              toast.error("Error al realizar la venta");
-              console.error(error);
-            }
-          }}
+          onCreateSale={onCreateSale}
+          isSubmitting={isSubmitting}
         />
       )}
     </div>

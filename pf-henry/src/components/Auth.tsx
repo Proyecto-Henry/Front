@@ -1,5 +1,3 @@
-//? FINAL
-
 "use client";
 
 import React, { useEffect } from "react";
@@ -9,7 +7,6 @@ import { loginUser, registerUser } from "@/services/authServices";
 import { toast } from "sonner";
 import { ILoginForm, IRegisterForm } from "@/interfaces/interfaces";
 import { useRouter } from "next/navigation";
-
 import { Image, Spinner } from "@heroui/react";
 import { signIn, useSession } from "next-auth/react";
 import { apiUrl } from "@/services/config";
@@ -21,7 +18,6 @@ const SlideLoginForm: React.FC = () => {
   const [isLoadingLogin, setIsLoadingLogin] = React.useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
   console.log("Session:", session);
-
   const router = useRouter();
   const { setUserData, userData } = useUserDataStore();
   const {
@@ -124,7 +120,7 @@ const SlideLoginForm: React.FC = () => {
       } else if (response && response.user.role === "user") {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
-        router.push(`/sucursal/${userData?.user.id}`);
+        router.push(`/sucursal/${response.user.id}`);
         reset();
       }
     } catch (error) {
