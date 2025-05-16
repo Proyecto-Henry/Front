@@ -19,7 +19,7 @@ const SlideLoginForm: React.FC = () => {
   const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
   console.log("Session:", session);
   const router = useRouter();
-  const { setUserData, userData } = useUserDataStore();
+  const { setUserData } = useUserDataStore();
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,

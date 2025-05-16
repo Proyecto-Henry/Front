@@ -101,8 +101,8 @@ interface IuserData {
 
 interface ISucursales {
   id: string;
-  adress: string;
-  img_profile: string;
+  address: string;
+  img_profile?: string;
   name: string;
 }
 
@@ -111,6 +111,5 @@ export interface IDataUser {
   name: string;
   adress: string;
   img_profile: string;
-  products: IProducto[]
+  products: IProducto[];
 }
-

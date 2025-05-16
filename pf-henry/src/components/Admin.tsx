@@ -16,6 +16,7 @@ interface ISucursal {
   email: string;
   password: string;
   img_store?: string;
+  img_profile?: string;
 }
 
 export default function AdminDashboard() {
