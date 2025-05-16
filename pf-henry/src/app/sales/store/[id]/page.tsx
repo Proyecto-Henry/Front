@@ -1,12 +1,12 @@
 import HistorySale from "@/components/HistorySale";
 
-interface Props {
+interface PageProps {
   params: {
     id: string;
   };
 }
 
-export default function Page({ params }: Props) {
+export default function Page({ params }: PageProps) {
   const { id } = params;
 
   return <HistorySale id={id} />;
