@@ -1,7 +1,13 @@
 import HistorySale from "@/components/HistorySale";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = params; // Correcto: params es un objeto, no una promesa
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
+  const { id } = params;
 
   return <HistorySale id={id} />;
 }

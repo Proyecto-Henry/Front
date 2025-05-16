@@ -1,6 +1,12 @@
 import Sucursal from "@/components/Sucursal";
 
-export default async function Page({ params }: { params: { id: string } }) {
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: Props) {
   const { id } = params;
 
   return <Sucursal id={id} />;
