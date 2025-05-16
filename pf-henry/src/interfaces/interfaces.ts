@@ -55,8 +55,8 @@ export interface IProducto {
   id: string;
   name: string;
   price: string;
-  stock: number;
   stock_min: number;
+  stock: number;
   status: boolean;
 }
 
@@ -79,7 +79,9 @@ export interface ISafeStockStore {
   userData: IuserData | null;
   isHydrated: boolean;
   sucursales: ISucursales[];
+  dataUser: null | IDataUser;
 
+  setDataUser: (dataUser: IDataUser) => void;
   setSucursales: (sucursales: ISucursales[]) => void;
   setUserData: (data: IuserData) => void;
   setHydrated: (state: boolean) => void;
@@ -89,6 +91,7 @@ export interface ISafeStockStore {
 interface IuserData {
   mesage: string;
   token: string;
+  img_profile: string;
   user: {
     id: string;
     name: string;
@@ -99,14 +102,15 @@ interface IuserData {
 
 interface ISucursales {
   id: string;
-  adress: string;
-  img_profile: string;
+  address: string;
+  img_profile?: string;
   name: string;
 }
 
-export interface ISession {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  googleId?: string;
+export interface IDataUser {
+  id: string;
+  name: string;
+  adress: string;
+  img_profile: string;
+  products: IProducto[];
 }

@@ -12,6 +12,9 @@ export const SuperAdmin = () => {
   const [searchText, setSearchText] = useState("");
   const [admins, setAdmins] = useState<IAdmin[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState<IAdmin | null>(null);
+  const [actionType, setActionType] = useState<"activate" | "deactivate" | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,19 +31,27 @@ export const SuperAdmin = () => {
     fetchData();
   }, []);
 
-  const toggleStatus = async (id: string) => {
+  const handleStatusChangeClick = (admin: IAdmin) => {
+    setSelectedAdmin(admin);
+    setActionType(admin.status === "active" ? "deactivate" : "activate");
+    setShowModal(true);
+  };
+
+  const confirmStatusChange = async () => {
+    if (!selectedAdmin) return;
+    
     try {
       setAdmins(
         admins.map((admin) =>
-          admin.id === id ? { ...admin, loading: true } : admin
+          admin.id === selectedAdmin.id ? { ...admin, loading: true } : admin
         )
       );
 
-      const { status, message } = await AdminService.toggleStatus(id);
+      const { status, message } = await AdminService.toggleStatus(selectedAdmin.id);
 
       setAdmins(
         admins.map((admin) =>
-          admin.id === id ? { ...admin, status, loading: false } : admin
+          admin.id === selectedAdmin.id ? { ...admin, status, loading: false } : admin
         )
       );
 
@@ -48,11 +59,15 @@ export const SuperAdmin = () => {
     } catch (err) {
       setAdmins(
         admins.map((admin) =>
-          admin.id === id ? { ...admin, loading: false } : admin
+          admin.id === selectedAdmin.id ? { ...admin, loading: false } : admin
         )
       );
       toast.error("Error al cambiar estado");
       console.error("Error detallado:", err);
+    } finally {
+      setShowModal(false);
+      setSelectedAdmin(null);
+      setActionType(null);
     }
   };
 
@@ -73,6 +88,41 @@ export const SuperAdmin = () => {
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-b from-[#fefeff] to-[#4470af]">
+      {showModal && selectedAdmin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">
+              {actionType === "activate" 
+                ? "¿Activar usuario?" 
+                : "¿Desactivar usuario?"}
+            </h3>
+            <p className="mb-6">
+              {actionType === "activate"
+                ? `Estás a punto de activar el usuario ${selectedAdmin.name}. ¿Deseas continuar?`
+                : `Estás a punto de desactivar el usuario ${selectedAdmin.name}. ¿Deseas continuar?`}
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setSelectedAdmin(null);
+                  setActionType(null);
+                }}
+                className="text-white px-4 py-2 border bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmStatusChange}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue 600 transition-colors"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-8 flex flex-col items-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
           ADMINISTRACIÓN
@@ -90,13 +140,13 @@ export const SuperAdmin = () => {
 
         <div
           className={`
-  ${
-    filteredAdmins.length === 1
-      ? "flex justify-center"
-      : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-  } 
-  gap-4
-`}
+            ${
+              filteredAdmins.length === 1
+                ? "flex justify-center"
+                : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            } 
+            gap-4
+          `}
         >
           {filteredAdmins.length === 0 ? (
             <div className="col-span-full text-center py-10">
@@ -129,7 +179,7 @@ export const SuperAdmin = () => {
               >
                 <UserCard
                   admin={admin}
-                  onStatusChange={() => toggleStatus(admin.id)}
+                  onStatusChange={() => handleStatusChangeClick(admin)}
                 />
               </div>
             ))
