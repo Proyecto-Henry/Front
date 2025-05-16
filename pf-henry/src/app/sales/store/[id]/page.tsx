@@ -1,5 +1,13 @@
 import HistorySale from "@/components/HistorySale";
 
-export default function Page({ params }: { params: { id: string } }) {
-  return <HistorySale id={params.id} />;
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+
+  return <HistorySale id={id} />;
 }
