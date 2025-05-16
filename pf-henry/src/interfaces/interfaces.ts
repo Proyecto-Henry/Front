@@ -91,6 +91,7 @@ export interface ISafeStockStore {
 interface IuserData {
   mesage: string;
   token: string;
+  img_profile: string;
   user: {
     id: string;
     name: string;
