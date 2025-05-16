@@ -6,7 +6,7 @@ interface Props {
   };
 }
 
-export default async function Page({ params }: Props) {
+export default function Page({ params }: Props) {
   const { id } = params;
 
   return <Sucursal id={id} />;
