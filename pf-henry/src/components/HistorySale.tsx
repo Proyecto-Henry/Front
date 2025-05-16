@@ -21,7 +21,7 @@ interface Props {
   id: string;
 }
 
-function HistorySale({ id }: Props) {
+export default function HistorySale({ id }: Props) {
   const { sucursales } = useUserDataStore();
   const sucursal = sucursales.find((item) => item.id === id);
   const [sales, setSales] = useState<Sale[]>([]);
@@ -104,5 +104,3 @@ function HistorySale({ id }: Props) {
     </div>
   );
 }
-
-export default HistorySale;
