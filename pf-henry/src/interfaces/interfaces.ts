@@ -114,3 +114,10 @@ export interface IDataUser {
   img_profile: string;
   products: IProducto[];
 }
+
+export interface ISession {
+  id: string;
+  name?: string;
+  email?: string;
+  googleId?: string | null;
+}
