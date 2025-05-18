@@ -1,11 +1,8 @@
 import Sucursal from "@/components/Sucursal";
 
-type Props = {
-  params: {
-    id: string;
-  };
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
+interface Props {
+  params: Promise<{ id: string }>;
+}
 
 export default async function Page({ params }: Props) {
   const { id } = await params;

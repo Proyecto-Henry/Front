@@ -12,7 +12,6 @@ import { notFound } from "next/navigation";
 
 interface Props {
   id: string;
-  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default function Sucursal({ id }: Props) {

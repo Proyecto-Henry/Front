@@ -19,7 +19,6 @@ interface Sale {
 
 interface Props {
   id: string;
-  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default function HistorySale({ id }: Props) {
