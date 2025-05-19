@@ -89,20 +89,25 @@ export interface ISafeStockStore {
 }
 
 interface IuserData {
-  mesage: string;
+  role: string;
   token: string;
+  img_profile?: string;
   user: {
-    id: string;
-    name: string;
+    created_at?: string;
     email: string;
-    role: string;
+    googleId?: string | null;
+    id: string;
+    img_profile?: string;
+    name: string;
+    phone?: string;
+    status?: string | null;
   };
 }
 
 interface ISucursales {
   id: string;
-  adress: string;
-  img_profile: string;
+  address: string;
+  img_profile?: string;
   name: string;
 }
 
@@ -111,6 +116,12 @@ export interface IDataUser {
   name: string;
   adress: string;
   img_profile: string;
-  products: IProducto[]
+  products: IProducto[];
 }
 
+export interface ISession {
+  id: string;
+  name?: string;
+  email?: string;
+  googleId?: string | null;
+}

@@ -1,4 +1,4 @@
-import Sucursal from "@/components/Sucursal";
+import HistorySale from "@/components/HistorySale";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -7,5 +7,5 @@ interface Props {
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
-  return <Sucursal id={id} />;
+  return <HistorySale id={id} />;
 }

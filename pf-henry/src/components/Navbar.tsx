@@ -10,6 +10,7 @@ import {
   NavbarItem,
   Link,
   Image,
+  Button,
 } from "@heroui/react";
 // import { s } from "framer-motion/client";
 import { LogIn, LogOut } from "lucide-react";
@@ -69,23 +70,32 @@ export default function App() {
           </NavbarItem>
         )}
         {userData && isHydrated && (
-          <NavbarItem>
-            <Link>
-              <button
-                className="relative group flex items-center justify-center p-2"
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                  clearUserData();
-                }}
-              >
-                <LogOut />
+          <>
+            <NavbarItem>
+              <Link href="/admin">
+                <Button className="relative group flex items-center justify-center p-2 bg-blue-400">
+                  Perfil
+                </Button>
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link>
+                <button
+                  className="relative group flex items-center justify-center p-2"
+                  onClick={() => {
+                    signOut({ callbackUrl: "/" });
+                    clearUserData();
+                  }}
+                >
+                  <LogOut />
 
-                <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
-                  Cerrar sesión
-                </span>
-              </button>
-            </Link>
-          </NavbarItem>
+                  <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
+                    Cerrar sesión
+                  </span>
+                </button>
+              </Link>
+            </NavbarItem>
+          </>
         )}
       </NavbarContent>
 
@@ -99,7 +109,7 @@ export default function App() {
         {userData && isHydrated && (
           <>
             <NavbarMenuItem>
-              <Link href="/dashboard" className="w-full" size="lg">
+              <Link href="/admin" className="w-full" size="lg">
                 Perfil
               </Link>
             </NavbarMenuItem>

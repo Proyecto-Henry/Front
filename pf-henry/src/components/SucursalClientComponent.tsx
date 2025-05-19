@@ -4,6 +4,9 @@ import { CirclePlus, X, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { apiUrl } from "@/services/config";
 import useUserDataStore from "@/store";
+import { toast } from "sonner";
+import { Spinner } from "@heroui/react";
+import Link from "next/link";
 
 interface Props {
   id: string;
@@ -20,6 +23,9 @@ interface IProduct {
 
 export default function SucursalClientComponent({ id }: Props) {
   const { sucursales, userData } = useUserDataStore();
+  const [isCreating, setIsCreating] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const sucursal = sucursales.find((item) => item.id === id);
   const [productos, setProductos] = useState<IProduct[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -29,12 +35,15 @@ export default function SucursalClientComponent({ id }: Props) {
     if (!sucursal) return;
     const fetchProductos = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`${apiUrl}/products/${sucursal.id}`);
         const data = await res.json();
         console.log("Productos:", data);
         setProductos(data);
       } catch (error) {
         console.error("Error al obtener productos:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,7 +67,7 @@ export default function SucursalClientComponent({ id }: Props) {
         const errorData = await res.json();
         throw new Error(errorData.message || "Error al crear el producto");
       }
-
+      toast.success("Producto creado exitosamente");
       const data = await res.json();
       return data;
     } catch (error) {
@@ -68,6 +77,7 @@ export default function SucursalClientComponent({ id }: Props) {
 
   // Crear producto desde formulario
   const handleCreate = async () => {
+    setIsCreating(true);
     const nuevoProducto: IProduct = {
       id: " ",
       name: form.nombre,
@@ -75,7 +85,7 @@ export default function SucursalClientComponent({ id }: Props) {
       stock: parseInt(form.stock),
       stock_min: 8,
       store_id: sucursal.id,
-      admin_id: userData.user.id,
+      admin_id: userData?.user.id,
     };
 
     try {
@@ -85,12 +95,37 @@ export default function SucursalClientComponent({ id }: Props) {
       setShowModal(false);
     } catch (err) {
       console.error("Error creando producto:", err);
+      toast.error("Hubo un error al crear el producto");
+    } finally {
+      setIsCreating(false);
     }
   };
 
-  const handleDelete = (index: number) => {
-    const newList = productos.filter((_, i) => i !== index);
-    setProductos(newList);
+  // const handleDelete = (index: number) => {
+  //   const newList = productos.filter((_, i) => i !== index);
+
+  //   setProductos(newList);
+  // };
+  const handleDelete = async (productId: string) => {
+    setDeletingId(productId);
+    try {
+      const res = await fetch(`${apiUrl}/products/${productId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al eliminar el producto");
+      }
+
+      setProductos((prev) => prev.filter((p) => p.id !== productId));
+      toast.success("Producto eliminado exitosamente");
+    } catch (error) {
+      console.error("Error eliminando producto:", error);
+      toast.error("Hubo un error al eliminar el producto");
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   return (
@@ -116,6 +151,20 @@ export default function SucursalClientComponent({ id }: Props) {
           </tr>
         </thead>
         <tbody>
+          {loading && (
+            <tr>
+              <td colSpan={5} className="text-center py-4">
+                <Spinner size="lg" color="white" />
+              </td>
+            </tr>
+          )}
+          {!loading && productos.length === 0 && (
+            <tr>
+              <td colSpan={5} className="text-center py-4">
+                No hay productos registrados.
+              </td>
+            </tr>
+          )}
           {productos.map((prod, id) => (
             <tr
               key={id}
@@ -128,9 +177,16 @@ export default function SucursalClientComponent({ id }: Props) {
               <td className="px-4 py-2">
                 <button
                   className="text-white hover:text-red-400 font-bold text-lg transition-transform hover:scale-110"
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(prod.id)}
+                  disabled={deletingId === prod.id}
                 >
-                  <Trash2 />
+                  {deletingId === prod.id ? (
+                    <div className="flex justify-center mt-4">
+                      <Spinner size="sm" color="danger" />
+                    </div>
+                  ) : (
+                    <Trash2 />
+                  )}
                 </button>
               </td>
             </tr>
@@ -175,13 +231,28 @@ export default function SucursalClientComponent({ id }: Props) {
             />
             <button
               onClick={handleCreate}
+              disabled={isCreating}
               className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
             >
               Crear
             </button>
+
+            {isCreating && (
+              <div className="flex justify-center mt-4">
+                <Spinner size="lg" color="primary" />
+              </div>
+            )}
           </div>
         </div>
       )}
+      <div>
+        <Link href={`/sales/store/${sucursal.id}`}>
+          <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors">
+            <span className="font-bold">Ver Ventas</span>
+            <span className="ml-2">💵</span>
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }
