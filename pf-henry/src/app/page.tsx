@@ -75,14 +75,23 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="pt-12 text-center">
+        <div className="pt-12 text-center space-y-2">
           <p className="text-[#3c3744]">¿No tienes cuenta?</p>
-          <a
-            href="/auth"
-            className="text-[#3066BE] font-semibold hover:underline"
-          >
-            Crea una o inicie sesión
-          </a>
+          <div className="flex flex-col md:flex-row justify-center gap-2 md:gap-4">
+            <a
+              href="/auth"
+              className="text-[#3066BE] font-semibold hover:underline"
+            >
+              Crea una o inicie sesión
+            </a>
+            <span className="hidden md:block text-[#3c3744]">|</span>
+            <a
+              href="/auth/superAdmin"
+              className="text-[#3066BE] font-semibold hover:underline"
+            >
+              Iniciar sesión como Super Admin
+            </a>
+          </div>
         </div>
       </section>
     </main>
