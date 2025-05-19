@@ -53,7 +53,7 @@ function LoginFormSuperAdmin() {
         className="flex flex-col w-full md:w-2/6 gap-4 p-4 bg-foreground-50 rounded-lg shadow-md"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-3xl font-bold ">Login</h1>
+        <h1 className="text-2xl font-bold ">Inicio de sesión SuperAdmin</h1>
 
         <Controller
           control={control}
@@ -121,7 +121,7 @@ function LoginFormSuperAdmin() {
               {...field}
               type="password"
               className="w-full"
-              placeholder="Password"
+              placeholder="Contraseña"
             />
           )}
         />
@@ -135,7 +135,7 @@ function LoginFormSuperAdmin() {
           radius="full"
           size="md"
         >
-          Login
+          Iniciar Sesión
         </Button>
       </form>
     </div>
