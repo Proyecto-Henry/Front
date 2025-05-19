@@ -89,14 +89,17 @@ export interface ISafeStockStore {
 }
 
 interface IuserData {
-  mesage: string;
+  role: string;
   token: string;
-  img_profile: string;
   user: {
-    id: string;
-    name: string;
+    created_at?: string;
     email: string;
-    role: string;
+    googleId?: string | null;
+    id: string;
+    img_profile?: string;
+    name: string;
+    phone?: string;
+    status?: string | null;
   };
 }
 

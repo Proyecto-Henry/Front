@@ -110,14 +110,14 @@ const SlideLoginForm: React.FC = () => {
     setIsLoadingLogin(true);
     try {
       const response = await loginUser(data);
-      console.log("Response:", response);
+      console.log("Response del backend...:", response);
 
-      if (response && response.user.role === "admin") {
+      if (response && response.role === "admin") {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
         router.push("/admin");
         reset();
-      } else if (response && response.user.role === "user") {
+      } else if (response && response.role === "user") {
         toast.success("Usuario logeado correctamente");
         setUserData(response);
         router.push(`/sucursal/${response.user.id}`);

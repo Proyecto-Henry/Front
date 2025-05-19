@@ -38,6 +38,7 @@ export async function loginUser(userData: ILoginForm) {
     }
 
     const data = await res.json();
+    console.log("Login data......", data);
     return data;
   } catch (error) {
     throw new Error((error as Error).message);
