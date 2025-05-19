@@ -91,6 +91,7 @@ export interface ISafeStockStore {
 interface IuserData {
   role: string;
   token: string;
+  img_profile: string;
   user: {
     created_at?: string;
     email: string;
