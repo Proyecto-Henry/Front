@@ -12,7 +12,7 @@ const UserProtectedPage = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         if (!isHydrated) return
 
-        if (!userData?.token || userData?.user?.role !== 'user') {
+        if (!userData?.token || userData?.role !== 'user') {
             router.replace("/") 
             return
         }
