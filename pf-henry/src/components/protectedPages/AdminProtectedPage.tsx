@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import useUserDataStore from "@/store"
 import { Spinner } from "@heroui/react"
+import ChatBot from "@/components/ChatBot"
 
 const AdminProtectedPage = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()
@@ -35,7 +36,12 @@ const AdminProtectedPage = ({ children }: { children: React.ReactNode }) => {
         )
     }
 
-    return <>{children}</>
+    return(
+       <>
+       {children}
+       <ChatBot />
+       </>
+       ) 
 }
 
 export default AdminProtectedPage
