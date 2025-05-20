@@ -12,12 +12,12 @@ const AdminProtectedPage = ({ children }: { children: React.ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        // Esperar a que cargue la sesión o el store, según el caso
+       
         if (status === "loading") return
         if (!session?.user && !isHydrated) return
 
         const isLocalAdmin = userData?.token && userData?.role === 'admin'
-        const isGoogleAdmin = !!session?.user // ya logueado por Google, sin usar userData
+        const isGoogleAdmin = !!session?.user 
 
         if (!isLocalAdmin && !isGoogleAdmin) {
             router.replace("/")

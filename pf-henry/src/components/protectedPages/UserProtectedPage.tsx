@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import useUserDataStore from "@/store"
 import { Spinner } from "@heroui/react"
+import { toast } from "sonner"
 
 const UserProtectedPage = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()
@@ -12,7 +13,10 @@ const UserProtectedPage = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         if (!isHydrated) return
 
-        if (!userData?.token || userData?.role !== 'user') {
+        if (!userData?.token || userData?.role !== 'user' || userData.user.status!= 'active') {
+            if(userData?.user.status!= 'active'){
+                toast.error('La cuenta se encuentra desactivada')
+            }
             router.replace("/") 
             return
         }
