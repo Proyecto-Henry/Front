@@ -1,5 +1,5 @@
 import HistorySale from "@/components/HistorySale";
-
+import AdminProtectedPage from "@/components/protectedPages/AdminProtectedPage";
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -7,5 +7,10 @@ interface Props {
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
-  return <HistorySale id={id} />;
+  return(
+    <AdminProtectedPage>
+    <HistorySale id={id} />;
+    </AdminProtectedPage>
+  ) 
+    
 }

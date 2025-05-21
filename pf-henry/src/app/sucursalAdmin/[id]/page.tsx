@@ -1,4 +1,5 @@
 import SucursalClientComponent from "@/components/SucursalClientComponent";
+import AdminProtectedPage from "@/components/protectedPages/AdminProtectedPage";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -6,6 +7,10 @@ interface Props {
 
 export default async function SucursalDetailPage({ params }: Props) {
   const { id } = await params;
-
-  return <SucursalClientComponent id={id} />;
+ return (
+        <AdminProtectedPage>
+            <SucursalClientComponent id={id} />
+        </AdminProtectedPage>
+    );
+  
 }

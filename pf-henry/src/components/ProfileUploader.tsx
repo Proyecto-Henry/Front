@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import useUserDataStore from "../store";
-// import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { apiUrl } from "@/services/config";
 import { Image } from "@heroui/react";

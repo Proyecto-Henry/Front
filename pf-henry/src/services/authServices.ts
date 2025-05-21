@@ -1,4 +1,4 @@
-import { ILoginForm, IRegisterForm } from "@/interfaces/interfaces";
+import { ILoginForm, IRegisterForm, ILoginFormSuperAdmin } from "@/interfaces/interfaces";
 import { apiUrl } from "./config";
 
 export async function registerUser(userData: IRegisterForm) {
@@ -42,5 +42,29 @@ export async function loginUser(userData: ILoginForm) {
     return data;
   } catch (error) {
     throw new Error((error as Error).message);
+  }
+}
+
+export async function loginSuperAdmin(superAdminData: ILoginFormSuperAdmin) {
+  try {
+    const res = await fetch(`${apiUrl}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(superAdminData),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      const errorMessage = data.message || "Error al autenticar como Super Admin";
+      throw new Error(errorMessage);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in loginSuperAdmin:", error);
+    throw error;
   }
 }

@@ -80,7 +80,11 @@ export interface ISafeStockStore {
   isHydrated: boolean;
   sucursales: ISucursales[];
   dataUser: null | IDataUser;
+  dataSuperAdmin: null | ISuperAdmin;
+   subscription: ISubscription | null;
 
+  setSubscription: (subscription: ISubscription) => void;
+  setDataSuperAdmin: (dataSuperAdmin: ISuperAdmin)=>void;
   setDataUser: (dataUser: IDataUser) => void;
   setSucursales: (sucursales: ISucursales[]) => void;
   setUserData: (data: IuserData) => void;
@@ -124,4 +128,38 @@ export interface ISession {
   name?: string;
   email?: string;
   googleId?: string | null;
+}
+
+export interface ISuperAdmin {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  role?: string;
+  token?: string;
+}
+
+export interface ILoginFormSuperAdmin {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface ISubscription {
+  admin: {
+    email: string;
+    id: string;
+    name: string;
+  };
+  end_date: string;
+  external_subscription_id: string;
+  external_subscription_item_id: string;
+  message: string;
+  plan: string;
+  start_date: string;
+  status: string;
+  stripe_customer_id: string;
+  stripe_plan_id: string;
+  success: boolean;
 }
