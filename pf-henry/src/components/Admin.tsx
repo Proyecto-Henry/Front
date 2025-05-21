@@ -5,9 +5,9 @@ import SucursalCard from "./Card";
 import useUserDataStore from "@/store";
 import ProfileUploader from "./ProfileUploader";
 import { apiUrl } from "@/services/config";
-// import { Spinner } from "@heroui/react";
 import Link from "next/link";
-// import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 interface ISucursal {
   id: string;
@@ -24,6 +24,7 @@ export default function AdminDashboard() {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+   const router = useRouter()
 
   async function getStoresByAdmin(
     admin_id: string,
@@ -85,18 +86,9 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-          {/* <div className="flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-lg shadow-md transition-shadow duration-300 p-4 h-80 hover:shadow-lg">
-            <SucursalCard />
-
-            <p className="mt-4 text-gray-600 font-semibold text-center">
-              Agregar nueva sucursal
-            </p>
-          </div> */}
-          {/* <div className="w-full h-1 bg-black mb-6"></div> */}
           <div className="w-full px-4 sm:px-8">
             {loading ? (
               <div className="flex items-center justify-center">
-                {/* <Spinner /> */}
               </div>
             ) : error ? (
               <p className="text-white text-lg text-center">
