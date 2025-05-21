@@ -85,7 +85,7 @@ const storeQuestions: Question[] = [
       "Cuando abres el carrito, en la misma fila del producto que desees, clickeas el tacho de basura en la columna de acciones.",
   },
   {
-    question: "¿Cómo subo o bajo la cantidad del carrito?",
+    question: "¿Cómo subo o bajo la cantidad de un producto del carrito?",
     answer:
       "Dentro del carrito, junto a cada producto hay botones para aumentar o disminuir la cantidad antes de realizar la venta.",
   },
