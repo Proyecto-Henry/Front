@@ -39,14 +39,26 @@ export async function registerUser(userData: IRegisterForm, token: string) {
   }
 }
 
-export default function SucursalCard() {
+export default function SucursalCard({
+  onSucursalCreada,
+}: {
+  onSucursalCreada: () => void;
+}) {
   const { userData } = useUserDataStore();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<IRegisterForm>();
+  } = useForm<IRegisterForm>({
+    defaultValues: {
+      name: "",
+      address: "",
+      email: "",
+      password: "",
+    },
+    mode: "onBlur",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onSubmit = async (data: IRegisterForm) => {
@@ -56,6 +68,7 @@ export default function SucursalCard() {
         toast.success("Sucursal creada correctamente");
         reset();
         setIsModalOpen(false);
+        onSucursalCreada();
       }
     } catch (error) {
       toast.error((error as Error).message);
@@ -65,7 +78,7 @@ export default function SucursalCard() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-64">
+        <div className="bg-gray-200 bg-opacity-80 rounded-xl p-6 w-full">
           <div className="flex justify-center">
             <button
               className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"
@@ -130,7 +143,13 @@ export default function SucursalCard() {
               placeholder="Contraseña"
               {...register("password", {
                 required: "Contraseña requerida",
-                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                  message:
+                    "La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial ( @ $ ! % * ? & )",
+                },
               })}
               className="w-[80%] h-[40px] bg-gray-100 px-4 py-2 rounded-md border text-black text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             />

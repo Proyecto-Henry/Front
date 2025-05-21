@@ -112,13 +112,13 @@ const SlideLoginForm: React.FC = () => {
       const response = await loginUser(data);
       console.log("Response del backend...:", response);
 
-      if (response && response.role === "admin") {
-        toast.success("Usuario logeado correctamente");
+      if (response && response.user.role === "admin") {
+        toast.success("Usuario logueado correctamente");
         setUserData(response);
         router.push("/admin");
         reset();
-      } else if (response && response.role === "user") {
-        toast.success("Usuario logeado correctamente");
+      } else if (response && response.user.role === "user") {
+        toast.success("Usuario logueado correctamente");
         setUserData(response);
         router.push(`/sucursal/${response.user.id}`);
         reset();
@@ -132,7 +132,25 @@ const SlideLoginForm: React.FC = () => {
   };
 
   return (
-    <main>
+    <main className="bg-white min-h-screen flex flex-col items-center justify-center px-4 py-6">
+      <div className="flex flex-col mt-4 items-center gap-2">
+        <button
+          onClick={() => signIn()}
+          className="flex items-center gap-3 bg-white px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+        >
+          <Image
+            src="https://yt3.googleusercontent.com/mhme5V2s8MFLJ7lTY1i5K4yZy6mIg8dbvPN-TYWGmDcbA5beh9qbxRWAeZ9lJNPddOaJxhf0=s900-c-k-c0x00ffffff-no-rj"
+            alt="Google"
+            width={24}
+            height={24}
+            className="object-contain"
+          />
+          <span className="text-gray-700 font-medium">
+            Iniciar sesión con Google
+          </span>
+        </button>
+        <p className="text-gray-500  mt-4 text-sm">O</p>
+      </div>
       <div className="container">
         <input type="checkbox" id="chk" aria-hidden="true" />
 
@@ -142,18 +160,7 @@ const SlideLoginForm: React.FC = () => {
             <label htmlFor="chk" aria-hidden="true">
               Registro
             </label>
-            <div className="flex flex-col items-center gap-2">
-              <div className="bg-white p-1 rounded-full shadow-md">
-                <button onClick={() => signIn()}>
-                  <Image
-                    src="https://yt3.googleusercontent.com/mhme5V2s8MFLJ7lTY1i5K4yZy6mIg8dbvPN-TYWGmDcbA5beh9qbxRWAeZ9lJNPddOaJxhf0=s900-c-k-c0x00ffffff-no-rj"
-                    alt="Google"
-                    className="h-6 w-6 object-contain"
-                  />
-                </button>
-              </div>
-              <p className="text-white text-sm">O</p>
-            </div>
+
             <input
               type="text"
               placeholder="Nombre de usuario"

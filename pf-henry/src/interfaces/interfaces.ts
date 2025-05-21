@@ -81,8 +81,8 @@ export interface ISafeStockStore {
   sucursales: ISucursales[];
   dataUser: null | IDataUser;
   dataSuperAdmin: null | ISuperAdmin;
-  
-  setDataSuperAdmin: (dataSuperAdmin: ISuperAdmin)=>void;
+
+  setDataSuperAdmin: (dataSuperAdmin: ISuperAdmin) => void;
   setDataUser: (dataUser: IDataUser) => void;
   setSucursales: (sucursales: ISucursales[]) => void;
   setUserData: (data: IuserData) => void;
@@ -91,18 +91,13 @@ export interface ISafeStockStore {
 }
 
 interface IuserData {
-  role: string;
+  message: string;
   token: string;
-  img_profile?: string;
   user: {
-    created_at?: string;
     email: string;
-    googleId?: string | null;
     id: string;
-    img_profile?: string;
     name: string;
-    phone?: string;
-    status?: string | null;
+    role: string;
   };
 }
 

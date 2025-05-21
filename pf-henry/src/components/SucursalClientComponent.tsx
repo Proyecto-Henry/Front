@@ -29,6 +29,7 @@ export default function SucursalClientComponent({ id }: Props) {
   const sucursal = sucursales.find((item) => item.id === id);
   const [productos, setProductos] = useState<IProduct[]>([]);
   const [showModal, setShowModal] = useState(false);
+
   const [form, setForm] = useState({ nombre: "", precio: "", stock: "" });
 
   useEffect(() => {
@@ -95,7 +96,7 @@ export default function SucursalClientComponent({ id }: Props) {
       setShowModal(false);
     } catch (err) {
       console.error("Error creando producto:", err);
-      toast.error("Hubo un error al crear el producto");
+      toast.error((err as Error).message);
     } finally {
       setIsCreating(false);
     }
@@ -130,14 +131,19 @@ export default function SucursalClientComponent({ id }: Props) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#fefeff] to-[#4470af] p-8 flex flex-col items-center transition-all duration-300 ease-in-out">
-      <div className="text-2xl font-bold mb-6 flex justify-center items-center gap-4 relative">
+      <div className="text-2xl font-bold mb-6 flex justify-center items-center gap-4 relative group">
         <h1 className="text-3xl font-extrabold text-center text-gray-800 drop-shadow-md">
           {sucursal.name}
         </h1>
-        <CirclePlus
-          className="w-8 h-8 text-blue-600 hover:text-blue-800 cursor-pointer transition-transform duration-200 transform hover:scale-110"
-          onClick={() => setShowModal(true)}
-        />
+        <div className="relative group">
+          <CirclePlus
+            className="w-8 h-8 text-blue-600 hover:text-blue-800 cursor-pointer transition-transform duration-200 transform hover:scale-110"
+            onClick={() => setShowModal(true)}
+          />
+          <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
+            Agregar Producto
+          </span>
+        </div>
       </div>
 
       <table className="min-w-full bg-blue-600 text-white rounded-md shadow-md overflow-hidden">
