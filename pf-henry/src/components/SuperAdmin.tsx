@@ -14,7 +14,9 @@ export const SuperAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<IAdmin | null>(null);
-  const [actionType, setActionType] = useState<"activate" | "deactivate" | null>(null);
+  const [actionType, setActionType] = useState<
+    "activate" | "deactivate" | null
+  >(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,13 +35,13 @@ export const SuperAdmin = () => {
 
   const handleStatusChangeClick = (admin: IAdmin) => {
     setSelectedAdmin(admin);
-    setActionType(admin.status === "active" ? "deactivate" : "activate");
+
     setShowModal(true);
   };
 
   const confirmStatusChange = async () => {
     if (!selectedAdmin) return;
-    
+
     try {
       setAdmins(
         admins.map((admin) =>
@@ -47,11 +49,15 @@ export const SuperAdmin = () => {
         )
       );
 
-      const { status, message } = await AdminService.toggleStatus(selectedAdmin.id);
+      const { status, message } = await AdminService.toggleStatus(
+        selectedAdmin.id
+      );
 
       setAdmins(
         admins.map((admin) =>
-          admin.id === selectedAdmin.id ? { ...admin, status, loading: false } : admin
+          admin.id === selectedAdmin.id
+            ? { ...admin, status, loading: false }
+            : admin
         )
       );
 
@@ -92,8 +98,8 @@ export const SuperAdmin = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold mb-4">
-              {actionType === "activate" 
-                ? "¿Activar usuario?" 
+              {actionType === "activate"
+                ? "¿Activar usuario?"
                 : "¿Desactivar usuario?"}
             </h3>
             <p className="mb-6">

@@ -8,9 +8,9 @@ main {
   font-family: sans-serif;
 }
 .container {
-  margin-top: 100px;
+  margin-top: 30px;
   width: 350px;
-  height: 500px;
+  height: 520px;
   background: #14398e;
   overflow: hidden;
   background: linear-gradient(to bottom, #fefeff, #4470af);
@@ -91,7 +91,7 @@ input {
 }
 
 #chk:checked ~ .login {
-  transform: translateY(-450px);
+  transform: translateY(-460px);
 }
 
 #chk:checked ~ .login label {

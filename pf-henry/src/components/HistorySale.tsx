@@ -34,9 +34,15 @@ export default function HistorySale({ id }: Props) {
         setLoading(true);
         const res = await fetch(`${apiUrl}/sales/store/${sucursal.id}`);
         const data = await res.json();
-        setSales(data);
+        if (Array.isArray(data)) {
+          setSales(data);
+        } else {
+          setSales([]);
+          console.log("Respuesta inesperada de ventas:", data);
+        }
       } catch (error) {
         console.error("Error al obtener ventas:", error);
+        setSales([]);
       } finally {
         setLoading(false);
       }
@@ -59,7 +65,7 @@ export default function HistorySale({ id }: Props) {
             aria-label="Loading..."
           />
         </div>
-      ) : sales.length === 0 ? (
+      ) : Array.isArray(sales) && sales.length === 0 ? (
         <p className="text-gray-500">No hay ventas registradas.</p>
       ) : (
         sales.map((sale) => (

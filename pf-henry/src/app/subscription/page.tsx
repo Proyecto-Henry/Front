@@ -1,11 +1,5 @@
-import Subscription from "@/components/Subscription"
+import { StripeWrapper } from "@/components/StripeWrapper";
 
-const subscription = () => {
-    return (
-        // <Elements stripe={stripePromise}>
-      <Subscription/>
-    // </Elements>
-    )
+export default function SubscriptionPage() {
+  return <StripeWrapper />;
 }
-
-export default subscription
