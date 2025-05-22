@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useUserDataStore from "@/store";
-import { toast } from "sonner";
 import { Spinner } from "@heroui/react";
 
 const ProtectedAuth = ({ children }: { children: React.ReactNode }) => {
@@ -14,13 +13,20 @@ const ProtectedAuth = ({ children }: { children: React.ReactNode }) => {
     if (!isHydrated) return;
 
     if (userData?.token) {
-      toast.warning("Usted ya está logueado.");
-      router.back();
-      return;
-    }
+      const role = userData.user.role;
+      const userId = userData.user.id;
 
-    setChecked(true);
-  }, [isHydrated, userData, router]);
+      if (role === "admin") {
+        router.push("/admin");
+      } else if (role === "user") {
+        router.push(`/sucursal/${userId}`);
+      } else {
+        router.push("/");
+      }
+    } else {
+      setChecked(true);
+    }
+  }, [isHydrated, router, userData]);
 
   if (!checked) {
     return (

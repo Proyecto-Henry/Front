@@ -14,7 +14,7 @@ export const UserCard = ({ admin, onStatusChange }: Props) => (
           ? "bg-purple-100 text-purple-800" 
           : "bg-blue-100 text-blue-800"
       }`}>
-        {admin.subscription?.status === "premium" ? "Premium" : "Básico"}
+        {admin.subscription?.plan}
       </span>
     </div>
 
@@ -30,10 +30,7 @@ export const UserCard = ({ admin, onStatusChange }: Props) => (
           {admin.status === 'active' ? " Activo" : " Inactivo"}
         </span>
       </p>
-      <p>
-        <span className="font-medium">Sucursales:</span> {admin.storesCount}
-      </p>
-      
+           
       {admin.subscription?.start_date ? (
         <p>
           <span className="font-medium">Última actualización:</span> {new Date(admin.subscription.start_date).toLocaleDateString()}

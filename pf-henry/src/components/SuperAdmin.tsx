@@ -15,7 +15,7 @@ export const SuperAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<IAdmin | null>(null);
   const [actionType, setActionType] = useState<
-    "activate" | "deactivate" | null
+    "activate" | "desactivate" | null
   >(null);
 
   useEffect(() => {
