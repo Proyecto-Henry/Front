@@ -19,19 +19,19 @@ const plans: { [key: string]: Plan } = {
   "1 store": {
     amount: 10,
     interval: "month",
-    enumKey: "basic",
+    enumKey: "BASIC",
     description: "1 Store - $10/mes",
   },
   "2 stores": {
     amount: 18,
     interval: "month",
-    enumKey: "plus",
+    enumKey: "PLUS",
     description: "2 Stores - $18/mes",
   },
   "4 stores": {
     amount: 30,
     interval: "month",
-    enumKey: "premium",
+    enumKey: "PREMIUM",
     description: "4 Stores - $30/mes",
   },
 };
