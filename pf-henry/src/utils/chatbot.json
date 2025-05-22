@@ -1,0 +1,68 @@
+[
+  {
+    "keywords": ["cancelar mi suscripción", "cancelar mi suscripcion", "dar de baja mi suscripción", "dar de baja mi suscripcion", "pausar el plan", "anular suscripción", "anular suscripcion", "cancelar suscripción", "cancelar suscripcion", "terminar suscripción", "terminar suscripcion", "baja de plan"],
+    "response": "Para cancelar tu suscripción, ve a la sección de 'Suscripciones' en tu panel de administrador. Allí podrás pausarla o darla de baja cuando lo necesites."
+  },
+
+  {
+    "keywords": ["agregar productos", "subir productos", "añadir producto", "anadir producto", "cargar productos", "nuevo producto", "cargar nuevo producto", "publicar producto"],
+    "response": "Para agregar productos a una sucursal, una vez que clickea en la tarjeta de la sucursal, lo redireccionará a la vista de esa sucursal en donde arriba de la tabla habrá un botón + para que puedas agregar productos. Luego, complete los campos."
+  },
+  {
+    "keywords": ["foto de perfil", "logo de perfil", "imagen de perfil", "imagen", "logo", "foto", "subir imagen", "cargar imagen", "cambiar foto", "editar imagen de perfil", "subir foto", "actualizar foto"],
+    "response": "Una vez que inicie sesión, debajo del nombre habrá un botón 'Seleccionar archivo'. Ahí elige la imagen, y luego debe tocar en el botón 'Subir imagen'."
+  },
+  {
+    "keywords": ["agregar sucursal", "nueva sucursal", "crear sucursal", "añadir sucursal", "anadir sucursal", "alta sucursal", "sumar sucursal", "registrar sucursal"],
+    "response": "Una vez que inicie sesión, debajo de los datos personales habrá una tarjeta con un botón + que dice 'Agregar nueva sucursal'."
+  },
+  {
+    "keywords": ["ver sucursal", "ver mis sucursales", "ver tienda", "acceder a sucursal", "mostrar sucursal", "entrar a sucursal", "abrir sucursal"],
+    "response": "Una vez que inicie sesión, debajo de los datos personales se cargarán en tarjetas las sucursales que tiene disponible. Tiene que hacer click en la tarjeta."
+  },
+
+  {
+    "keywords": ["eliminar productos", "borrar productos", "quitar productos", "sacar productos", "dar de baja productos"],
+    "response": "Una vez que clickea en la tarjeta de la sucursal, lo redireccionará a la vista de esa sucursal en donde se cargará una lista de productos. En la última columna podrá realizar la acción de eliminar."
+  },
+  {
+    "keywords": ["ver ventas sucursal", "consultar ventas sucursal", "ventas por tienda", "ventas por sucursal", "acceder a ventas", "ventas"],
+    "response": "Una vez que clickea en la tarjeta de la sucursal, lo redireccionará a la vista de esa sucursal. Debajo de la lista de los productos habrá un botón llamado 'Ver ventas'."
+  },
+  {
+    "keywords": ["eliminar sucursal", "borrar sucursal", "quitar sucursal", "cerrar sucursal", "dar de baja sucursal"],
+    "response": "Una vez que clickea en la tarjeta de la sucursal, lo redireccionará a la vista de esa sucursal. Debajo de la lista de los productos habrá un botón llamado 'Eliminar sucursal'."
+  },
+  {
+    "keywords": ["cambiar de plan", "modificar plan", "actualizar plan", "seleccionar otro plan", "mejorar plan", "plan de suscripción", "plan de suscripcion"],
+    "response": "Puedes cambiar tu plan en la sección de 'Suscripciones' de tu panel. Los planes disponibles son: '1 tienda' por $10, '2 tiendas' por $18, y '4 tiendas' por $30. Selecciona el plan que prefieras y confirma el cambio. El nuevo plan se aplicará de inmediato."
+  },
+  {
+    "keywords": ["ver detalles suscripción", "ver detalles suscripcion", "estado de suscripción", "estado de suscripcion", "info de plan", "información suscripción", "informacion suscripcion", "detalles de mi plan", "mi suscripción", "mi suscripcion"],
+    "response": "Para ver los detalles de tu suscripción, como el plan, el estado y las fechas de inicio y fin, ve a la sección de 'Suscripciones' en tu panel de administrador. Allí encontrarás toda la información de tu plan actual."
+  },
+  {
+    "keywords": ["falló pago", "fallo pago", "problema con pago", "problema con el pago","error de pago", "pago fallido", "no se cobró", "no se cobro", "suscripción pausada", "suscripcion pausada"],
+    "response": "Si hubo un problema con el pago de tu suscripción, puede que se haya pausado automáticamente. Si el problema persiste, contacta al soporte para ayudarte."
+  },
+  {
+    "keywords": ["horario soporte", "atención al cliente", "atencion al cliente", "cuándo responden", "cuando responden", "contactar soporte", "correo soporte", "disponibilidad soporte"],
+    "response": "El soporte está disponible de lunes a viernes de 9 a 18 hs. Puedes escribirnos enviando un correo a safestock08@gmail.com."
+  },
+  {
+    "keywords": ["no tengo productos", "no hay productos", "productos vacíos", "productos vacios", "no aparecen productos", "sin productos", "lista vacía de productos", "lista vacia de productos"],
+    "response": "Es posible que el administrador no haya cargado ningún producto todavía."
+  },
+  {
+    "keywords": ["realizar venta", "hacer venta", "vender producto", "agregar al carrito", "terminar venta", "nueva venta", "procesar venta"],
+    "response": "En el listado de productos disponibles, haz click en el producto que desees agregar. Se abrirá un modal donde podrás elegir la cantidad. Luego haz click en 'Agregar al carrito', abre el carrito en la parte superior derecha y selecciona 'Realizar venta'."
+  },
+  {
+    "keywords": ["eliminar del carrito", "quitar producto del carrito", "borrar del carrito", "sacar del carrito", "eliminar producto seleccionado"],
+    "response": "Cuando abres el carrito, en la misma fila del producto que desees, clickeas el ícono del tacho de basura en la columna de acciones."
+  },
+  {
+    "keywords": ["modificar cantidad producto carrito", "cambiar cantidad carrito", "subir cantidad", "bajar cantidad", "actualizar cantidad", "ajustar cantidad"],
+    "response": "Dentro del carrito, junto a cada producto hay botones para aumentar o disminuir la cantidad antes de realizar la venta."
+  }
+]

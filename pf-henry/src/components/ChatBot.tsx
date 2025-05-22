@@ -1,31 +1,74 @@
 'use client';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BotMessageSquare } from 'lucide-react';
+import chatData from '@/utils/chatbot.json';
 
-import { useState } from "react";
-import { BotMessageSquare } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { adminQuestions, storeQuestions } from "@/utils/questions";
+type Message = {
+  sender: 'user' | 'bot';
+  text: string;
+  isTyping?: boolean;
+};
+
+const TypingDots = () => {
+  return (
+    <div className="flex gap-1">
+      {[0, 1, 2].map(i => (
+        <motion.span
+          key={i}
+          className="w-2 h-2 bg-gray-600 rounded-full"
+          animate={{
+            y: [0, -3, 0],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 0.6,
+            delay: i * 0.2,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'home' | 'admin' | 'store' | 'answer'>('home');
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  const [lastRole, setLastRole] = useState<'admin' | 'store'>('admin');
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    { sender: 'bot', text: '¿Que dudas tienes?' },
+  ]);
 
-  const handleBack = () => {
-    if (view === 'answer') {
-      setSelectedAnswer(null);
-      setSelectedQuestion(null);
-      setView(lastRole);
-    } else {
-      setView('home');
-    }
-  };
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleQuestionClick = (question: string, answer: string) => {
-    setSelectedQuestion(question);
-    setSelectedAnswer(answer);
-    setView('answer');
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+
+    const newUserMessage: Message = { sender: 'user', text: input };
+    const match = chatData.find(entry =>
+      entry.keywords.some(keyword =>
+        input.toLowerCase().includes(keyword.toLowerCase())
+      )
+    );
+
+    const botReply: Message = match
+      ? { sender: 'bot', text: match.response }
+      : { sender: 'bot', text: 'Lo siento, no entendí tu pregunta.' };
+   
+    setMessages(prev => [...prev, newUserMessage, { sender: 'bot', text: '', isTyping: true }]);
+    setInput('');
+
+    setTimeout(() => {
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = botReply;
+        return updated;
+      });
+    }, 2000);
   };
 
   return (
@@ -55,77 +98,51 @@ export default function ChatBot() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-20 right-4 w-80 bg-white rounded-xl shadow-2xl p-4 z-50 max-h-[400px] overflow-hidden flex flex-col"
+              className="fixed bottom-20 right-4 w-80 bg-white rounded-xl shadow-2xl p-4 z-50 max-h-[400px] flex flex-col"
             >
-              {view === 'home' && (
-                <div className="space-y-3">
-                  <p className="font-semibold">
-                    Hola, soy <span className="text-blue-600 italic font-bold">SafeBot</span>, el chatbot de SafeStock y estoy listo para ayudarte.
-                  </p>
-                  <button
-                    onClick={() => { setView('admin'); setLastRole('admin'); }}
-                    className="w-full px-4 py-2 bg-blue-800 text-white rounded-lg"
+        <p className="font-semibold mb-2">
+          Hola, soy <span className="text-blue-600 italic font-bold">SafeBot</span>, el chatbot de SafeStock y estoy listo para ayudarte.
+        </p>
+
+              <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+                {messages.map((msg, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className={`p-2 rounded-md text-sm ${
+                      msg.sender === 'user'
+                        ? 'bg-blue-100 self-end text-right'
+                        : 'bg-gray-100 self-start text-left'
+                    }`}
                   >
-                    Administrador
-                  </button>
-                  <button
-                    onClick={() => { setView('store'); setLastRole('store'); }}
-                    className="w-full px-4 py-2 bg-blue-800 text-white rounded-lg"
-                  >
-                    Sucursal
-                  </button>
-                </div>
-              )}
+                    {msg.isTyping ? (
+                      <TypingDots />
+                    ) : (
+                      msg.text
+                    )}
+                  </motion.div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
 
-              {view === 'admin' && (
-                <div className="space-y-3 overflow-y-auto flex-1">
-                  <p className="font-semibold">¿Qué necesitás saber?</p>
-                  {adminQuestions.map((q, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleQuestionClick(q.question, q.answer)}
-                      className="text-left w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md"
-                    >
-                      {q.question}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {view === 'store' && (
-                <div className="space-y-3 overflow-y-auto flex-1">
-                  <p className="font-semibold">¿Qué necesitás saber?</p>
-                  {storeQuestions.map((q, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleQuestionClick(q.question, q.answer)}
-                      className="text-left w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md"
-                    >
-                      {q.question}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {view === 'answer' && selectedAnswer && (
-                <div className="space-y-3 overflow-y-auto flex-1">
-                  {selectedQuestion && (
-                    <p className="text-gray-800 italic font-semibold">{selectedQuestion}</p>
-                  )}
-                  <p className="text-gray-700 whitespace-pre-wrap">{selectedAnswer}</p>
-                </div>
-              )}
-
-              {view !== 'home' && (
-                <div className="mt-4 flex justify-end">
-                  <button
-                    onClick={handleBack}
-                    className="mt-2 px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-400 text-sm"
-                  >
-                    Volver
-                  </button>
-                </div>
-              )}
+              <div className="mt-3 flex items-center gap-2">
+                <input
+                  type="text"
+                  className="flex-1 px-3 py-1 rounded-md border text-sm"
+                  placeholder="Escribí tu pregunta..."
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSend()}
+                />
+                <button
+                  onClick={handleSend}
+                  className="px-3 py-1 bg-blue-700 text-white rounded-md hover:bg-blue-600 text-sm"
+                >
+                  Enviar
+                </button>
+              </div>
             </motion.div>
           </>
         )}
@@ -133,3 +150,4 @@ export default function ChatBot() {
     </div>
   );
 }
+
