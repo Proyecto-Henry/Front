@@ -5,6 +5,10 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { toast } from "sonner";
 import useUserDataStore from "@/store";
+import { loadStripe } from '@stripe/stripe-js';
+
+export const stripePromise = loadStripe("pk_test_xxx...");
+
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 

@@ -6,6 +6,7 @@ import useUserDataStore from "@/store";
 import ProfileUploader from "./ProfileUploader";
 import { apiUrl } from "@/services/config";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ISucursal {
   id: string;
@@ -21,6 +22,8 @@ export default function AdminDashboard() {
   const { userData, setSucursales, sucursales } = useUserDataStore();
 
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   async function getStoresByAdmin(
     admin_id: string,
@@ -77,6 +80,8 @@ export default function AdminDashboard() {
                     Cantidad de Sucursales: {sucursales.length}
                   </p>
                 </div>
+                  <p onClick={() => router.push("/subscription")}
+  className="mt-4 text-blue-600 cursor-pointer hover:underline">Subscripciones</p>
               </div>
             </div>
           </div>
