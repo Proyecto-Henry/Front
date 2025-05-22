@@ -5,7 +5,6 @@ import SucursalCard from "./Card";
 import useUserDataStore from "@/store";
 import ProfileUploader from "./ProfileUploader";
 import { apiUrl } from "@/services/config";
-// import { Spinner } from "@heroui/react";
 import Link from "next/link";
 
 interface ISucursal {
