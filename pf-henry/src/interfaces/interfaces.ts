@@ -22,6 +22,7 @@ export interface IAdmin {
   subscription: {
     status: string;
     start_date: string;
+    plan: string;
   };
 }
 
