@@ -22,6 +22,7 @@ export interface IAdmin {
   subscription: {
     status: string;
     start_date: string;
+    plan: string;
   };
 }
 
@@ -80,7 +81,11 @@ export interface ISafeStockStore {
   isHydrated: boolean;
   sucursales: ISucursales[];
   dataUser: null | IDataUser;
+  dataSuperAdmin: null | ISuperAdmin;
+  subscription: ISubscription | null;
 
+  setSubscription: (subscription: ISubscription) => void;
+  setDataSuperAdmin: (dataSuperAdmin: ISuperAdmin) => void;
   setDataUser: (dataUser: IDataUser) => void;
   setSucursales: (sucursales: ISucursales[]) => void;
   setUserData: (data: IuserData) => void;
@@ -89,18 +94,14 @@ export interface ISafeStockStore {
 }
 
 interface IuserData {
-  role: string;
+  message: string;
   token: string;
-  img_profile?: string;
   user: {
-    created_at?: string;
     email: string;
-    googleId?: string | null;
     id: string;
-    img_profile?: string;
     name: string;
-    phone?: string;
-    status?: string | null;
+    role: string;
+    img_profile: string;
   };
 }
 
@@ -124,4 +125,38 @@ export interface ISession {
   name?: string;
   email?: string;
   googleId?: string | null;
+}
+
+export interface ISuperAdmin {
+  message: string;
+  token?: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role?: string;
+  };
+}
+
+export interface ILoginFormSuperAdmin {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface ISubscription {
+  status?: string;
+  mesage: string;
+  subscription: {
+    end_date: string;
+    external_subscription_id: string;
+    external_subscription_item_id: string;
+    message: string;
+    plan: string;
+    start_date: string;
+    status: string;
+    stripe_customer_id: string;
+    stripe_plan_id: string;
+    success: boolean;
+  };
 }

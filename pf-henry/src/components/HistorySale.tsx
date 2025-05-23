@@ -6,10 +6,12 @@ import { notFound } from "next/navigation";
 import { Spinner } from "@heroui/react";
 
 interface SaleDetail {
-  id: string;
   quantity: number;
+  product: {
+    name: string;
+    price: string;
+  };
 }
-
 interface Sale {
   id: string;
   date: string;
@@ -34,9 +36,14 @@ export default function HistorySale({ id }: Props) {
         setLoading(true);
         const res = await fetch(`${apiUrl}/sales/store/${sucursal.id}`);
         const data = await res.json();
-        setSales(data);
+        if (Array.isArray(data)) {
+          setSales(data);
+        } else {
+          setSales([]);
+        }
       } catch (error) {
         console.error("Error al obtener ventas:", error);
+        setSales([]);
       } finally {
         setLoading(false);
       }
@@ -59,7 +66,7 @@ export default function HistorySale({ id }: Props) {
             aria-label="Loading..."
           />
         </div>
-      ) : sales.length === 0 ? (
+      ) : Array.isArray(sales) && sales.length === 0 ? (
         <p className="text-gray-500">No hay ventas registradas.</p>
       ) : (
         sales.map((sale) => (
@@ -84,19 +91,36 @@ export default function HistorySale({ id }: Props) {
             <p className="text-gray-700 mb-2">
               <strong>Total:</strong> ${parseFloat(sale.total).toFixed(2)}
             </p>
+
             <div>
-              <p className="font-medium text-gray-800 mb-1">
+              <p className="font-medium text-gray-800 mb-2">
                 Productos vendidos:
               </p>
-              <ul className="pl-5 list-disc text-gray-600">
-                {sale.sale_details.map((detail) => (
-                  <li key={detail.id}>
-                    Producto ID:{" "}
-                    <code className="text-sm">{detail.id.slice(0, 8)}...</code>{" "}
-                    – Cantidad: {detail.quantity}
-                  </li>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {sale.sale_details.map((detail, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-50 p-3 rounded-lg border border-gray-100"
+                  >
+                    <p className="text-gray-800">
+                      <strong>Producto:</strong> {detail.product.name}
+                    </p>
+                    <p className="text-gray-600">
+                      <strong>Cantidad:</strong> {detail.quantity}
+                    </p>
+                    <p className="text-gray-600">
+                      <strong>Precio unitario:</strong> $
+                      {parseFloat(detail.product.price).toFixed(2)}
+                    </p>
+                    <p className="text-gray-700 font-semibold">
+                      Total: $
+                      {(
+                        parseFloat(detail.product.price) * detail.quantity
+                      ).toFixed(2)}
+                    </p>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         ))

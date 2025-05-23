@@ -10,13 +10,24 @@ const useUserDataStore = create<ISafeStockStore>()(
         userData: null,
         isHydrated: false,
         dataUser: null,
+        dataSuperAdmin: null,
+        subscription: null,
+        setSubscription: (subscription) => set({ subscription }),
 
-        setDataUser:(dataUser) => set({dataUser}),
+        setDataSuperAdmin: (dataSuperAdmin) => set({ dataSuperAdmin }),
+        setDataUser: (dataUser) => set({ dataUser }),
         setSucursales: (sucursales) => set({ sucursales }),
         setUserData: (data) => set({ userData: data }),
         setHydrated: (state) => set({ isHydrated: state }),
         clearUserData: () =>
-          set({ userData: null, isHydrated: false, sucursales: [], dataUser:null}),
+          set({
+            userData: null,
+            isHydrated: false,
+            sucursales: [],
+            dataUser: null,
+            dataSuperAdmin: null,
+            subscription: null,
+          }),
       }),
       {
         name: "safeStock-store",
