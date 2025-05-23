@@ -144,19 +144,18 @@ export interface ILoginFormSuperAdmin {
 }
 
 export interface ISubscription {
-  admin: {
-    email: string;
-    id: string;
-    name: string;
+  status?: string;
+  mesage: string;
+  subscription: {
+    end_date: string;
+    external_subscription_id: string;
+    external_subscription_item_id: string;
+    message: string;
+    plan: string;
+    start_date: string;
+    status: string;
+    stripe_customer_id: string;
+    stripe_plan_id: string;
+    success: boolean;
   };
-  end_date: string;
-  external_subscription_id: string;
-  external_subscription_item_id: string;
-  message: string;
-  plan: string;
-  start_date: string;
-  status: string;
-  stripe_customer_id: string;
-  stripe_plan_id: string;
-  success: boolean;
 }

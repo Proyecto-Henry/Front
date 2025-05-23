@@ -26,6 +26,7 @@ const useUserDataStore = create<ISafeStockStore>()(
             sucursales: [],
             dataUser: null,
             dataSuperAdmin: null,
+            subscription: null,
           }),
       }),
       {

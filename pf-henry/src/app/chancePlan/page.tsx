@@ -1,10 +1,13 @@
+import ChangePlan from "@/components/ChangePlan";
 import AdminProtectedPage from "@/components/protectedPages/AdminProtectedPage";
-import { StripeWrapper } from "@/components/StripeWrapper";
+import React from "react";
 
-export default function SubscriptionPage() {
+function ChancePlan() {
   return (
     <AdminProtectedPage>
-      <StripeWrapper />
+      <ChangePlan />
     </AdminProtectedPage>
   );
 }
+
+export default ChancePlan;

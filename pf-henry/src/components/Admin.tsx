@@ -6,6 +6,7 @@ import useUserDataStore from "@/store";
 import ProfileUploader from "./ProfileUploader";
 import { apiUrl } from "@/services/config";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ISucursal {
   id: string;
@@ -18,8 +19,9 @@ interface ISucursal {
 }
 
 export default function AdminDashboard() {
-  const { userData, setSucursales, sucursales } = useUserDataStore();
-
+  const { userData, setSucursales, sucursales, setSubscription } =
+    useUserDataStore();
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   async function getStoresByAdmin(
@@ -41,11 +43,28 @@ export default function AdminDashboard() {
     return Array.isArray(data) ? data : [data];
   }
 
+  async function fetchSubscription(admin_id: string) {
+    try {
+      const res = await fetch(`${apiUrl}/subscriptions/admin/${admin_id}`, {});
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al obtener suscripción");
+      }
+
+      const data = await res.json();
+      setSubscription(data);
+    } catch (error) {
+      console.error("Error al obtener suscripción:", (error as Error).message);
+    }
+  }
+
   const fetchSucursales = async () => {
     if (userData?.user?.id && userData?.token) {
       try {
         const data = await getStoresByAdmin(userData.user.id, userData.token);
         setSucursales(data);
+        await fetchSubscription(userData.user.id);
       } catch (error) {
         setError((error as Error).message);
       }
@@ -77,6 +96,12 @@ export default function AdminDashboard() {
                     Cantidad de Sucursales: {sucursales.length}
                   </p>
                 </div>
+                <p
+                  onClick={() => router.push("/subscription")}
+                  className="mt-4 text-blue-600 cursor-pointer hover:underline"
+                >
+                  Subscripciones
+                </p>
               </div>
             </div>
           </div>

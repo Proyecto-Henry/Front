@@ -26,6 +26,7 @@ export default function App() {
   // const menuItems = ["Home", "Dashboard", "Cerrar Sesión", "Iniciar Sesión"];
   const { userData, isHydrated, clearUserData } = useUserDataStore();
   const { data: session } = useSession();
+
   console.log("Session:", session);
 
   return (
@@ -69,10 +70,38 @@ export default function App() {
             </Link>
           </NavbarItem>
         )}
-        {userData && isHydrated && (
+        {userData && userData.user.role === "admin" && isHydrated && (
           <>
             <NavbarItem>
               <Link href="/admin">
+                <Button className="relative group flex items-center justify-center p-2 bg-blue-400">
+                  Perfil
+                </Button>
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link>
+                <button
+                  className="relative group flex items-center justify-center p-2"
+                  onClick={() => {
+                    signOut({ callbackUrl: "/" });
+                    clearUserData();
+                  }}
+                >
+                  <LogOut />
+
+                  <span className="absolute hidden group-hover:flex -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100 z-10">
+                    Cerrar sesión
+                  </span>
+                </button>
+              </Link>
+            </NavbarItem>
+          </>
+        )}
+        {userData && userData.user.role === "user" && isHydrated && (
+          <>
+            <NavbarItem>
+              <Link href={`/sucursal/${userData.user.id}`}>
                 <Button className="relative group flex items-center justify-center p-2 bg-blue-400">
                   Perfil
                 </Button>
@@ -106,10 +135,34 @@ export default function App() {
           </Link>
         </NavbarMenuItem>
 
-        {userData && isHydrated && (
+        {userData && userData.user.role === "admin" && isHydrated && (
           <>
             <NavbarMenuItem>
               <Link href="/admin" className="w-full" size="lg">
+                Perfil
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <button
+                onClick={() => {
+                  signOut({ callbackUrl: "/" });
+                  clearUserData();
+                }}
+                className="w-2.2/12 text-warning hover:text-danger"
+              >
+                Cerrar Sesión
+              </button>
+            </NavbarMenuItem>
+          </>
+        )}
+        {userData && userData.user.role === "user" && isHydrated && (
+          <>
+            <NavbarMenuItem>
+              <Link
+                href={`/sucursal/${userData.user.id}`}
+                className="w-full"
+                size="lg"
+              >
                 Perfil
               </Link>
             </NavbarMenuItem>

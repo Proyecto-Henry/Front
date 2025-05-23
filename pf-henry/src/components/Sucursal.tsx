@@ -107,8 +107,7 @@ export default function Sucursal({ id }: Props) {
         })),
         store_id: dataUser?.id,
       };
-      console.log(dataUser?.id);
-      console.log("SALE DATA", saleData);
+
       const res = await fetch(`${apiUrl}/sales`, {
         method: "POST",
         headers: {

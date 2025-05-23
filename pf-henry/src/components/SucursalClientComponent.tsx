@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { CirclePlus, X, Trash2 } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { apiUrl } from "@/services/config";
 import useUserDataStore from "@/store";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ interface IProduct {
 }
 
 export default function SucursalClientComponent({ id }: Props) {
+  const router = useRouter();
   const { sucursales, userData } = useUserDataStore();
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -29,6 +30,8 @@ export default function SucursalClientComponent({ id }: Props) {
   const sucursal = sucursales.find((item) => item.id === id);
   const [productos, setProductos] = useState<IProduct[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [isDeletingStore, setIsDeletingStore] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [form, setForm] = useState({ nombre: "", precio: "", stock: "" });
 
@@ -39,7 +42,7 @@ export default function SucursalClientComponent({ id }: Props) {
         setLoading(true);
         const res = await fetch(`${apiUrl}/products/${sucursal.id}`);
         const data = await res.json();
-        console.log("Productos:", data);
+
         setProductos(data);
       } catch (error) {
         console.error("Error al obtener productos:", error);
@@ -53,7 +56,32 @@ export default function SucursalClientComponent({ id }: Props) {
 
   if (!sucursal) return notFound();
 
-  // Crear producto y enviarlo al backend
+  const handleDeleteStore = async () => {
+    if (!sucursal) return;
+    setIsDeletingStore(true);
+    try {
+      const res = await fetch(`${apiUrl}/stores/${sucursal.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al eliminar la sucursal");
+      }
+
+      toast.success("Sucursal eliminada exitosamente");
+      setShowDeleteModal(false);
+      router.push("/admin");
+      const updatedSucursales = sucursales.filter((item) => item.id !== id);
+      useUserDataStore.setState({ sucursales: updatedSucursales });
+    } catch (error) {
+      console.error("Error eliminando sucursal:", error);
+      toast.error((error as Error).message);
+    } finally {
+      setIsDeletingStore(false);
+    }
+  };
+
   const handleCreateProduct = async (product: IProduct) => {
     try {
       const res = await fetch(`${apiUrl}/products`, {
@@ -102,11 +130,6 @@ export default function SucursalClientComponent({ id }: Props) {
     }
   };
 
-  // const handleDelete = (index: number) => {
-  //   const newList = productos.filter((_, i) => i !== index);
-
-  //   setProductos(newList);
-  // };
   const handleDelete = async (productId: string) => {
     setDeletingId(productId);
     try {
@@ -251,13 +274,55 @@ export default function SucursalClientComponent({ id }: Props) {
           </div>
         </div>
       )}
-      <div>
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 shadow-lg relative animate-fadeIn">
+            <button
+              className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-200"
+              onClick={() => setShowDeleteModal(false)}
+            >
+              <X className="w-5 h-5 text-red-600" />
+            </button>
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-700">
+              ¿Eliminar esta sucursal?
+            </h2>
+            <p className="text-center text-gray-600 mb-4">
+              Esta acción no se puede deshacer. Se eliminarán todos los
+              productos asociados.
+            </p>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteStore}
+                disabled={isDeletingStore}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
+              >
+                {isDeletingStore ? "Eliminando..." : "Confirmar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex gap-4 mt-4">
         <Link href={`/sales/store/${sucursal.id}`}>
-          <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors">
+          <button className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors">
             <span className="font-bold">Ver Ventas</span>
             <span className="ml-2">💵</span>
           </button>
         </Link>
+        <button
+          onClick={() => setShowDeleteModal(true)}
+          className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors"
+        >
+          <span className="font-bold">Eliminar Sucursal</span>
+          <span className="ml-2">🗑️</span>
+        </button>
       </div>
     </div>
   );

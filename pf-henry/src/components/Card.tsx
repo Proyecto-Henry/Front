@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { apiUrl } from "../services/config";
 import useUserDataStore from "../store";
 import ModalCreate from "@/utils/Modal";
+import { Spinner } from "@heroui/react";
 // import ModalCreate from "@/utils/Modal";
 
 export interface IRegisterForm {
@@ -15,28 +16,6 @@ export interface IRegisterForm {
   address: string;
   email: string;
   password: string;
-}
-
-export async function registerUser(userData: IRegisterForm, token: string) {
-  try {
-    const res = await fetch(`${apiUrl}/auth/signUpStore`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.message || "Error al registrar la sucursal");
-    }
-
-    return await res.json();
-  } catch (error) {
-    throw new Error((error as Error).message);
-  }
 }
 
 export default function SucursalCard({
@@ -60,6 +39,31 @@ export default function SucursalCard({
     mode: "onBlur",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  async function registerUser(userData: IRegisterForm, token: string) {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${apiUrl}/auth/signUpStore`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Error al registrar la sucursal");
+      }
+
+      return await res.json();
+    } catch (error) {
+      throw new Error((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const onSubmit = async (data: IRegisterForm) => {
     try {
@@ -159,9 +163,10 @@ export default function SucursalCard({
 
             <button
               type="submit"
+              disabled={isLoading}
               className="w-[80%] h-[40px] bg-blue-600 mt-2 px-4 py-2 rounded-md text-white font-bold hover:bg-blue-700 transition"
             >
-              Crear
+              {isLoading ? <Spinner color="white" size="sm" /> : "Crear"}
             </button>
           </div>
         </form>

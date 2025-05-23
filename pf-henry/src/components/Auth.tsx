@@ -17,7 +17,7 @@ const SlideLoginForm: React.FC = () => {
   const [isLoadingSignup, setIsLoadingSignup] = React.useState(false);
   const [isLoadingLogin, setIsLoadingLogin] = React.useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
-  console.log("Session:", session);
+
   const router = useRouter();
   const { setUserData } = useUserDataStore();
   const {
@@ -61,8 +61,6 @@ const SlideLoginForm: React.FC = () => {
           toast.success(responseData.message || "Inicio de sesión exitoso");
 
           router.push("/admin");
-
-          console.log("Respuesta del backend:", responseData);
         } catch (error) {
           toast.error("Error al autenticar con Google");
           console.error("Error al enviar datos:", error);
@@ -92,7 +90,6 @@ const SlideLoginForm: React.FC = () => {
     setIsLoadingSignup(true);
     try {
       const response = await registerUser(data);
-      console.log("Response:", response);
 
       if (response) {
         toast.success("Usuario registrado correctamente");
@@ -110,7 +107,6 @@ const SlideLoginForm: React.FC = () => {
     setIsLoadingLogin(true);
     try {
       const response = await loginUser(data);
-      console.log("Response del backend...:", response);
 
       if (response && response.user.role === "admin") {
         toast.success("Usuario logueado correctamente");
@@ -128,7 +124,6 @@ const SlideLoginForm: React.FC = () => {
     } finally {
       setIsLoadingLogin(false);
     }
-    console.log("Login Data:", data);
   };
 
   return (

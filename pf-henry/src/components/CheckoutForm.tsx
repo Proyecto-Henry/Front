@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { toast } from "sonner";
 import useUserDataStore from "@/store";
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+import { useRouter } from "next/navigation";
+import { apiUrl } from "@/services/config";
 
 interface Plan {
   amount: number;
@@ -19,19 +19,19 @@ const plans: { [key: string]: Plan } = {
   "1 store": {
     amount: 10,
     interval: "month",
-    enumKey: "BASIC",
+    enumKey: "1 store",
     description: "1 Store - $10/mes",
   },
   "2 stores": {
     amount: 18,
     interval: "month",
-    enumKey: "PLUS",
+    enumKey: "2 stores",
     description: "2 Stores - $18/mes",
   },
   "4 stores": {
     amount: 30,
     interval: "month",
-    enumKey: "PREMIUM",
+    enumKey: "4 stores",
     description: "4 Stores - $30/mes",
   },
 };
@@ -39,11 +39,16 @@ const plans: { [key: string]: Plan } = {
 export const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-
+  const router = useRouter();
   const { userData, setSubscription, subscription } = useUserDataStore();
-
   const [selectedPlan, setSelectedPlan] = useState("1 store");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (subscription?.subscription.status === "active") {
+      router.push("/chancePlan");
+    }
+  }, [subscription, router]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -64,13 +69,11 @@ export const CheckoutForm = () => {
       });
 
       if (error) {
-        console.error("[Stripe error]", error);
         alert(error.message || "Error con el método de pago.");
         return;
       }
 
       const planData = plans[selectedPlan];
-      console.log(planData);
 
       const response = await axios.post(
         `${apiUrl}/subscriptions/createSubscription`,
@@ -92,12 +95,11 @@ export const CheckoutForm = () => {
       );
 
       if (response.data) {
-        setSubscription({
-          ...subscription,
-          ...response.data,
-          status: "active",
-        });
+        if (!response.data)
+          toast.error("Hubo un error al crear la suscripción.");
+        setSubscription(response.data);
         toast.success("✅ Suscripción creada exitosamente.");
+        router.push("/chancePlan");
       }
     } catch (err) {
       console.error(err);
@@ -116,6 +118,25 @@ export const CheckoutForm = () => {
         <p className="text-center mb-4">
           Elige tu plan y completa el pago para suscribirte
         </p>
+        <p className="text-center mb-4">
+          Elige tu plan y completa el pago para suscribirte
+        </p>
+
+        {subscription?.subscription.status === "cancelled" && (
+          <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded">
+            {" "}
+            Tu suscripción actual está <strong>cancelada</strong>. Por favor
+            elige un nuevo plan para continuar disfrutando del servicio.
+          </div>
+        )}
+        {subscription?.subscription.status === "trial" && (
+          <div className="mb-4 p-3 bg-blue-100 text-blue-800 border border-blue-300 rounded">
+            Tu plan actual está en <strong>período de prueba</strong>. Algunas
+            funciones pueden estar limitadas. Para aprovechar al máximo todos
+            nuestros servicios, te invitamos a elegir uno de nuestros planes
+            disponibles.
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium">
