@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { CirclePlus, X, Trash2 } from "lucide-react";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { apiUrl } from "@/services/config";
 import useUserDataStore from "@/store";
 import { toast } from "sonner";
@@ -36,7 +36,10 @@ export default function SucursalClientComponent({ id }: Props) {
   const [form, setForm] = useState({ nombre: "", precio: "", stock: "" });
 
   useEffect(() => {
-    if (!sucursal) return;
+      if (!sucursal){
+      router.push("/admin")
+      return
+    } 
     const fetchProductos = async () => {
       try {
         setLoading(true);
@@ -52,9 +55,12 @@ export default function SucursalClientComponent({ id }: Props) {
     };
 
     fetchProductos();
-  }, [id, sucursal]);
+  }, [id, sucursal, router]);
 
-  if (!sucursal) return notFound();
+   if (!sucursal){
+    router.push("/admin")
+    return
+  } 
 
   const handleDeleteStore = async () => {
     if (!sucursal) return;

@@ -39,7 +39,7 @@ function LoginFormSuperAdmin() {
       const response = await loginSuperAdmin(data);
 
       if (response) {
-        toast.success("Super Admin logged successfully");
+         toast.success("Super Admin logueado exitosamente"); 
         setDataSuperAdmin(response);
         router.push("/superAdmin");
       }
