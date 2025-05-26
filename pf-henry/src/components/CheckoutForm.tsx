@@ -118,9 +118,6 @@ export const CheckoutForm = () => {
         <p className="text-center mb-4">
           Elige tu plan y completa el pago para suscribirte
         </p>
-        <p className="text-center mb-4">
-          Elige tu plan y completa el pago para suscribirte
-        </p>
 
         {subscription?.subscription.status === "cancelled" && (
           <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded">

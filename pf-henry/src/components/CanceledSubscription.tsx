@@ -50,7 +50,7 @@ const CanceledSubscription = ({ onClose }: Props) => {
 
   return (
     <div className="px-6 pb-6">
-      <h2>Advertenvia</h2>
+      <h2>Advertencia</h2>
       <p>
         Una vez cancelada la subscripcion, ya no tendras los beneficios de tu
         plan actual.¿Seguro que quieres cancelar?
