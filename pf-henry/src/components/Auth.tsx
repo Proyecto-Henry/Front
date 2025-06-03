@@ -17,6 +17,7 @@ const SlideLoginForm: React.FC = () => {
   const [isLoadingSignup, setIsLoadingSignup] = React.useState(false);
   const [isLoadingLogin, setIsLoadingLogin] = React.useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   const router = useRouter();
   const { setUserData } = useUserDataStore();
@@ -56,9 +57,13 @@ const SlideLoginForm: React.FC = () => {
           }
 
           const responseData = await res.json();
-
+          setIsRedirecting(true);
           setUserData(responseData);
-          toast.success(responseData.message || "Inicio de sesión exitoso");
+          // toast.success(responseData.message || "Inicio de sesión exitoso");
+          localStorage.setItem(
+            "loginSuccessMessage",
+            responseData.message || "Inicio de sesión exitoso"
+          );
 
           router.push("/admin");
         } catch (error) {
@@ -77,6 +82,7 @@ const SlideLoginForm: React.FC = () => {
     isLoadingLogin ||
     isLoadingSignup ||
     isLoadingGoogle ||
+    isRedirecting ||
     status === "loading"
   ) {
     return (
@@ -109,13 +115,23 @@ const SlideLoginForm: React.FC = () => {
       const response = await loginUser(data);
 
       if (response && response.user.role === "admin") {
-        toast.success("Usuario logueado correctamente");
+        setIsRedirecting(true);
+        // toast.success("Usuario logueado correctamente");
         setUserData(response);
+        localStorage.setItem(
+          "loginSuccessMessage",
+          "Usuario logueado correctamente"
+        );
         router.push("/admin");
         reset();
       } else if (response && response.user.role === "user") {
-        toast.success("Usuario logueado correctamente");
+        setIsRedirecting(true);
+
         setUserData(response);
+        localStorage.setItem(
+          "loginSuccessMessage",
+          "Usuario logueado correctamente"
+        );
         router.push(`/sucursal/${response.user.id}`);
         reset();
       }
@@ -152,7 +168,7 @@ const SlideLoginForm: React.FC = () => {
         {/* Sign Up */}
         <div className="signup">
           <form onSubmit={handleSubmit(onSignupSubmit)}>
-            <label htmlFor="chk" aria-hidden="true">
+            <label htmlFor="chk" id="lebel" aria-hidden="true">
               Registro
             </label>
 
@@ -218,7 +234,7 @@ const SlideLoginForm: React.FC = () => {
         {/* Login */}
         <div className="login">
           <form onSubmit={handleLoginSubmit(onLoginSubmit)}>
-            <label htmlFor="chk" aria-hidden="true">
+            <label htmlFor="chk" id="lebel" aria-hidden="true">
               Ingresar
             </label>
             <input

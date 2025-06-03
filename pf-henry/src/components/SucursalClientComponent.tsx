@@ -34,12 +34,19 @@ export default function SucursalClientComponent({ id }: Props) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [form, setForm] = useState({ nombre: "", precio: "", stock: "" });
+  useEffect(() => {
+    const message = localStorage.getItem("loginSuccessMessage");
+    if (message) {
+      toast.success(message);
+      localStorage.removeItem("loginSuccessMessage");
+    }
+  }, []);
 
   useEffect(() => {
-      if (!sucursal){
-      router.push("/admin")
-      return
-    } 
+    if (!sucursal) {
+      router.push("/admin");
+      return;
+    }
     const fetchProductos = async () => {
       try {
         setLoading(true);
@@ -57,10 +64,10 @@ export default function SucursalClientComponent({ id }: Props) {
     fetchProductos();
   }, [id, sucursal, router]);
 
-   if (!sucursal){
-    router.push("/admin")
-    return
-  } 
+  if (!sucursal) {
+    router.push("/admin");
+    return;
+  }
 
   const handleDeleteStore = async () => {
     if (!sucursal) return;

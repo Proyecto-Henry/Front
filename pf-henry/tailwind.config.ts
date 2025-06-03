@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-const {heroui} = require("@heroui/react");
+import { heroui } from "@heroui/react";
 
 export default {
   content: [

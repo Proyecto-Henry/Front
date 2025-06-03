@@ -7,6 +7,7 @@ import ProfileUploader from "./ProfileUploader";
 import { apiUrl } from "@/services/config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ISucursal {
   id: string;
@@ -74,13 +75,20 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchSucursales();
   }, [userData]);
+  useEffect(() => {
+    const message = localStorage.getItem("loginSuccessMessage");
+    if (message) {
+      toast.success(message);
+      localStorage.removeItem("loginSuccessMessage");
+    }
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 bg-gradient-to-b from-[#f9f9fd] to-[#4470af] p-6">
         <div className="max-w-6xl mx-auto flex flex-col items-center">
           <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-            HOLA {userData?.user?.name}
+            Hola {userData?.user?.name}
           </h1>
           <div className="flex flex-col items-center justify-center bg-white/90 rounded-xl shadow-lg p-8 mb-12 w-full max-w-md">
             <div className="flex flex-col items-center gap-4">
