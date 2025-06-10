@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { HeroUIProvider } from "@heroui/react";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 type ProvidersProps = {
   children: ReactNode;
@@ -10,7 +11,11 @@ type ProvidersProps = {
 export function Providers({ children }: ProvidersProps) {
   return (
     <SessionProvider>
-      <HeroUIProvider>{children}</HeroUIProvider>
+      <HeroUIProvider>
+        <NextThemesProvider attribute="class" defaultTheme="dark">
+          {children}
+        </NextThemesProvider>
+      </HeroUIProvider>
     </SessionProvider>
   );
 }

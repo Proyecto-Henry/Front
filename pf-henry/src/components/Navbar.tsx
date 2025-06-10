@@ -30,7 +30,11 @@ export default function App() {
   console.log("Session:", session);
 
   return (
-    <Navbar disableAnimation isBordered className="bg-white">
+    <Navbar
+      disableAnimation
+      isBordered
+      className="bg-white dark:bg-black text-black dark:text-white"
+    >
       <NavbarContent className="sm:hidden" justify="start">
         {(userData || !userData) && isHydrated && <NavbarMenuToggle />}
       </NavbarContent>

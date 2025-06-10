@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
 import Navbar from "../components/Navbar";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 const inter = Inter({
   weight: ["800"],
@@ -34,13 +35,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${inter}`}
-    >
-      <body className="antialiased">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${inter}`}
+        suppressHydrationWarning
+      >
         <Providers>
           <Navbar />
+          <ThemeSwitcher />
           <Toaster richColors position="top-center" />
 
           {children}

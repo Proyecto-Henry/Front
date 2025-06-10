@@ -2,20 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+html {
+  scroll-behavior: snooth;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
+html,
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply size-full;
+}
+
+.main-container {
+  max-width: 97vw;
+  margin: 0 auto;
+  padding: 5 5px;
+}
+
+main {
+  @apply flex-1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply tracking-tight;
+}
+
+.library-wrapper {
+  height: calc(100vh - theme ("height.16"));
 }

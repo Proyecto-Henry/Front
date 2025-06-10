@@ -85,18 +85,18 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 bg-gradient-to-b from-[#f9f9fd] to-[#4470af] p-6">
+      <main className="flex-1 bg-gradient-to-b from-[#f9f9fd] to-[#4470af] dark:from-black dark:to-gray-800 dark:text-white p-6">
         <div className="max-w-6xl mx-auto flex flex-col items-center">
-          <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
+          <h1 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-slate-400">
             Hola {userData?.user?.name}
           </h1>
-          <div className="flex flex-col items-center justify-center bg-white/90 rounded-xl shadow-lg p-8 mb-12 w-full max-w-md">
+          <div className="flex flex-col items-center justify-center bg-white/90 dark:bg-neutral-900 rounded-xl shadow-lg p-8 mb-12 w-full max-w-md">
             <div className="flex flex-col items-center gap-4">
               <div className="mb-2">
                 <ProfileUploader />
               </div>
               <div className="text-center">
-                <p className="text-lg font-medium text-gray-800 mb-2">
+                <p className="text-lg font-medium text-gray-800  dark:text-slate-400 mb-2">
                   {userData?.user?.email}
                 </p>
                 <div className="bg-blue-100 px-4 py-2 rounded-full">
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="w-full px-4 sm:px-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
               {sucursales.length === 0 && !error ? (
                 <p className="text-white text-lg text-center col-span-full">
                   No tienes ninguna sucursal registrada aún.
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                   <Link
                     href={`/sucursalAdmin/${sucursal.id}`}
                     key={sucursal.id}
-                    className="flex flex-col items-center justify-center w-full h-80 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                    className="flex flex-col items-center justify-center w-full h-80 p-4 bg-white dark:bg-neutral-900 border-2 border-dashed border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
                   >
                     <h2 className="text-lg font-semibold">{sucursal.name}</h2>
                     <p className="text-gray-600 text-sm text-center">
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
                 ))
               )}
 
-              <div className="flex flex-col items-center justify-center w-full h-80 p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg">
+              <div className="flex flex-col items-center justify-center w-full h-80 p-4 bg-white dark:bg-neutral-900 border-2 border-dashed border-gray-300 border-2 border-dashed border-gray-300 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg">
                 <SucursalCard onSucursalCreada={fetchSucursales} />
                 <p className="mt-4 text-gray-600 font-semibold text-center">
                   Agregar nueva sucursal
